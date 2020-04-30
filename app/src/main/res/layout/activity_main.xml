@@ -6,13 +6,44 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/zip_code_entry_icon_size"
+        android:layout_height="@dimen/zip_code_entry_icon_size"
+        android:src="@drawable/ic_location_on_black_24dp"
+        app:layout_constraintBottom_toTopOf="@+id/title"
+        app:layout_constraintEnd_toEndOf="@+id/title"
+        app:layout_constraintStart_toStartOf="@+id/title" />
+
     <TextView
+        android:id="@+id/title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello AD 340! My name is David!"
+        android:text="Enter your ZIP Code"
+        android:textSize="@dimen/title_text_height"
+        app:layout_constraintBottom_toTopOf="@+id/zipCodeEditText"
+        app:layout_constraintEnd_toEndOf="@+id/zipCodeEditText"
+        app:layout_constraintStart_toStartOf="@+id/zipCodeEditText" />
+
+    <EditText
+        android:id="@+id/zipCodeEditText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="Enter ZIP Code"
+        android:inputType="number"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.25" />
+
+    <Button
+        android:id="@+id/enterButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Submit ZIP Code"
+        app:layout_constraintEnd_toEndOf="@+id/zipCodeEditText"
+        app:layout_constraintStart_toStartOf="@+id/zipCodeEditText"
+        app:layout_constraintTop_toBottomOf="@+id/zipCodeEditText" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
