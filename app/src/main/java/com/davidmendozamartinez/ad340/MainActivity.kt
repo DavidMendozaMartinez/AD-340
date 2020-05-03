@@ -5,8 +5,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 
 class MainActivity : AppCompatActivity() {
+
+    private val forecastRepository = ForecastRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -21,8 +24,13 @@ class MainActivity : AppCompatActivity() {
             if (zipCode.length != 5) {
                 Toast.makeText(this, R.string.zip_code_entry_error, Toast.LENGTH_SHORT).show()
             } else {
-                Toast.makeText(this, zipCode, Toast.LENGTH_SHORT).show()
+                forecastRepository.loadForecast(zipCode)
             }
         }
+
+        forecastRepository.weaklyForecast.observe(this, Observer { forecastItems ->
+            // update our list adapter
+            Toast.makeText(this, "Loaded Items", Toast.LENGTH_SHORT).show()
+        })
     }
 }
