@@ -39,7 +39,6 @@ class ForecastDetailsActivity : AppCompatActivity() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        // Handle item selection
         return when (item.itemId) {
             R.id.tempDisplaySetting -> {
                 showTempDisplaySettingDialog(this, tempDisplaySettingManager)

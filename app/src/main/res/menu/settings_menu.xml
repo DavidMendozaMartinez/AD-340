@@ -3,5 +3,5 @@
 
     <item
         android:id="@+id/tempDisplaySetting"
-        android:title="Display Units" />
+        android:title="@string/temp_display_setting_title" />
 </menu>

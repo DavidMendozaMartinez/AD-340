@@ -8,8 +8,8 @@ fun formatTempForDisplay(temp: Float, tempDisplaySetting: TempDisplaySetting): S
     return when (tempDisplaySetting) {
         TempDisplaySetting.Fahrenheit -> String.format("%.2f F°", temp)
         TempDisplaySetting.Celsius -> {
-            val temp = (temp - 32f) * (5f / 9f)
-            String.format("%.2f C°", temp)
+            val celsiusTemp = (temp - 32f) * (5f / 9f)
+            String.format("%.2f C°", celsiusTemp)
         }
     }
 }
@@ -19,8 +19,8 @@ fun showTempDisplaySettingDialog(
     tempDisplaySettingManager: TempDisplaySettingManager
 ) {
     val dialogBuilder = AlertDialog.Builder(context)
-        .setTitle("Choose Display Units")
-        .setMessage("Choose which temperature unit to use for temperature display")
+        .setTitle(R.string.temp_display_setting_dialog_title)
+        .setMessage(R.string.temp_display_setting_dialog_message)
         .setPositiveButton("F°") { _, _ ->
             tempDisplaySettingManager.updateSetting(TempDisplaySetting.Fahrenheit)
         }
@@ -28,8 +28,11 @@ fun showTempDisplaySettingDialog(
             tempDisplaySettingManager.updateSetting(TempDisplaySetting.Celsius)
         }
         .setOnDismissListener {
-            Toast.makeText(context, "Setting will take affect on app restart", Toast.LENGTH_SHORT)
-                .show()
+            Toast.makeText(
+                context,
+                R.string.temp_display_setting_dialog_dismiss_message,
+                Toast.LENGTH_SHORT
+            ).show()
         }
 
     dialogBuilder.show()
