@@ -5,14 +5,12 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.davidmendozamartinez.ad340.details.ForecastDetailsActivity
+import com.davidmendozamartinez.ad340.location.LocationEntryFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,19 +23,6 @@ class MainActivity : AppCompatActivity() {
 
         tempDisplaySettingManager = TempDisplaySettingManager(this)
 
-        val zipCodeEditText: EditText = findViewById(R.id.zipCodeEditText)
-        val enterButton: Button = findViewById(R.id.enterButton)
-
-        enterButton.setOnClickListener {
-            val zipCode: String = zipCodeEditText.text.toString()
-
-            if (zipCode.length != 5) {
-                Toast.makeText(this, R.string.zip_code_entry_error, Toast.LENGTH_SHORT).show()
-            } else {
-                forecastRepository.loadForecast(zipCode)
-            }
-        }
-
         val forecastList: RecyclerView = findViewById(R.id.forecastList)
         forecastList.layoutManager = LinearLayoutManager(this)
         val dailyForecastAdapter = DailyForecastAdapter(tempDisplaySettingManager) { forecast ->
@@ -48,6 +33,11 @@ class MainActivity : AppCompatActivity() {
         forecastRepository.weaklyForecast.observe(this, Observer { forecastItems ->
             dailyForecastAdapter.submitList(forecastItems)
         })
+
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.fragmentContainer, LocationEntryFragment())
+            .commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

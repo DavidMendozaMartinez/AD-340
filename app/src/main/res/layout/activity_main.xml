@@ -6,48 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-    <ImageView
-        android:id="@+id/icon"
-        android:layout_width="@dimen/zip_code_entry_icon_size"
-        android:layout_height="@dimen/zip_code_entry_icon_size"
-        android:importantForAccessibility="no"
-        android:src="@drawable/ic_location_on_black_24dp"
-        app:layout_constraintBottom_toTopOf="@+id/title"
-        app:layout_constraintEnd_toEndOf="@+id/title"
-        app:layout_constraintStart_toStartOf="@+id/title" />
-
-    <TextView
-        android:id="@+id/title"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/label_zip_code_entry"
-        android:textSize="@dimen/title_text_height"
-        app:layout_constraintBottom_toTopOf="@+id/zipCodeEditText"
-        app:layout_constraintEnd_toEndOf="@+id/zipCodeEditText"
-        app:layout_constraintStart_toStartOf="@+id/zipCodeEditText" />
-
-    <EditText
-        android:id="@+id/zipCodeEditText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="@string/hint_zip_code_entry"
-        android:importantForAutofill="no"
-        android:inputType="number"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.25" />
-
-    <Button
-        android:id="@+id/enterButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/button_submit_zip_code"
-        app:layout_constraintEnd_toEndOf="@+id/zipCodeEditText"
-        app:layout_constraintStart_toStartOf="@+id/zipCodeEditText"
-        app:layout_constraintTop_toBottomOf="@+id/zipCodeEditText" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/forecastList"
         android:layout_width="0dp"
@@ -58,6 +16,16 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/enterButton" />
+        app:layout_constraintTop_toBottomOf="@+id/enterButton"
+        tools:listitem="@layout/item_daily_forecast" />
+
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
