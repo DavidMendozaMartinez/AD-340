@@ -1,5 +1,6 @@
 package com.davidmendozamartinez.ad340.location
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +9,17 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.davidmendozamartinez.ad340.AppNavigator
 import com.davidmendozamartinez.ad340.R
 
-/**
- * A simple [Fragment] subclass.
- */
 class LocationEntryFragment : Fragment() {
+
+    private lateinit var appNavigator: AppNavigator
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        appNavigator = context as AppNavigator
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,13 +37,10 @@ class LocationEntryFragment : Fragment() {
                 Toast.makeText(requireContext(), R.string.zip_code_entry_error, Toast.LENGTH_SHORT)
                     .show()
             } else {
-                Toast.makeText(requireContext(), "ZIP Code Entered", Toast.LENGTH_SHORT).show()
-                //forecastRepository.loadForecast(zipCode)
+                appNavigator.navigateToCurrentForecast(zipCode)
             }
         }
 
         return view
     }
-
-
 }

@@ -1,20 +1,15 @@
 package com.davidmendozamartinez.ad340
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.davidmendozamartinez.ad340.details.ForecastDetailsActivity
+import com.davidmendozamartinez.ad340.forecast.CurrentForecastFragment
 import com.davidmendozamartinez.ad340.location.LocationEntryFragment
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), AppNavigator {
 
-    private val forecastRepository = ForecastRepository()
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,17 +17,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         tempDisplaySettingManager = TempDisplaySettingManager(this)
-
-        val forecastList: RecyclerView = findViewById(R.id.forecastList)
-        forecastList.layoutManager = LinearLayoutManager(this)
-        val dailyForecastAdapter = DailyForecastAdapter(tempDisplaySettingManager) { forecast ->
-            showForecastDetails(forecast)
-        }
-        forecastList.adapter = dailyForecastAdapter
-
-        forecastRepository.weaklyForecast.observe(this, Observer { forecastItems ->
-            dailyForecastAdapter.submitList(forecastItems)
-        })
 
         supportFragmentManager
             .beginTransaction()
@@ -56,10 +40,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showForecastDetails(forecast: DailyForecast) {
-        val forecastDetailsIntent = Intent(this, ForecastDetailsActivity::class.java)
-        forecastDetailsIntent.putExtra("key_temp", forecast.temp)
-        forecastDetailsIntent.putExtra("key_description", forecast.description)
-        startActivity(forecastDetailsIntent)
+    override fun navigateToCurrentForecast(zipCode: String) {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainer, CurrentForecastFragment.newInstance(zipCode))
+            .commit()
     }
 }
