@@ -1,5 +1,6 @@
 package com.davidmendozamartinez.ad340.forecast
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,11 +12,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.davidmendozamartinez.ad340.*
 import com.davidmendozamartinez.ad340.details.ForecastDetailsActivity
+import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class CurrentForecastFragment : Fragment() {
 
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
     private val forecastRepository = ForecastRepository()
+
+    private lateinit var appNavigator: AppNavigator
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        appNavigator = context as AppNavigator
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -27,12 +36,17 @@ class CurrentForecastFragment : Fragment() {
 
         val view = inflater.inflate(R.layout.fragment_current_forecast, container, false)
 
-        val forecastList: RecyclerView = view.findViewById(R.id.forecastList)
-        forecastList.layoutManager = LinearLayoutManager(requireContext())
-        val dailyForecastAdapter = DailyForecastAdapter(tempDisplaySettingManager) { forecast ->
+        val locationEntryButton: FloatingActionButton = view.findViewById(R.id.locationEntryButton)
+        locationEntryButton.setOnClickListener {
+            appNavigator.navigateToLocationEntry()
+        }
+
+        val dailyForecastList: RecyclerView = view.findViewById(R.id.dailyForecastList)
+        dailyForecastList.layoutManager = LinearLayoutManager(requireContext())
+        val dailyForecastAdapter = DailyForecastListAdapter(tempDisplaySettingManager) { forecast ->
             showForecastDetails(forecast)
         }
-        forecastList.adapter = dailyForecastAdapter
+        dailyForecastList.adapter = dailyForecastAdapter
 
         forecastRepository.weaklyForecast.observe(this, Observer { forecastItems ->
             dailyForecastAdapter.submitList(forecastItems)

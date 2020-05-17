@@ -24,7 +24,7 @@ class DailyForecastViewHolder(
     }
 }
 
-class DailyForecastAdapter(
+class DailyForecastListAdapter(
     private val tempDisplaySettingManager: TempDisplaySettingManager,
     private val clickHandler: (DailyForecast) -> Unit
 ) : ListAdapter<DailyForecast, DailyForecastViewHolder>(DIFF_CONFIG) {
