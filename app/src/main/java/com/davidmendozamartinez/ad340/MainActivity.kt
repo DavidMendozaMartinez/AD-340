@@ -5,6 +5,9 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
+import androidx.navigation.findNavController
+import com.davidmendozamartinez.ad340.forecast.CurrentForecastFragmentDirections
+import com.davidmendozamartinez.ad340.location.LocationEntryFragmentDirections
 
 class MainActivity : AppCompatActivity(), AppNavigator {
 
@@ -34,16 +37,14 @@ class MainActivity : AppCompatActivity(), AppNavigator {
     }
 
     override fun navigateToCurrentForecast(zipCode: String) {
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragmentContainer, CurrentForecastFragment.newInstance(zipCode))
-//            .commit()
+        val action =
+            LocationEntryFragmentDirections.actionLocationEntryFragmentToCurrentForecastFragment()
+        findNavController(R.id.nav_host_fragment).navigate(action)
     }
 
     override fun navigateToLocationEntry() {
-//        supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragmentContainer, LocationEntryFragment())
-//            .commit()
+        val action =
+            CurrentForecastFragmentDirections.actionCurrentForecastFragmentToLocationEntryFragment()
+        findNavController(R.id.nav_host_fragment).navigate(action)
     }
 }
