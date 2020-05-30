@@ -1,7 +1,6 @@
 package com.davidmendozamartinez.ad340.forecast
 
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,7 +10,6 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.davidmendozamartinez.ad340.*
-import com.davidmendozamartinez.ad340.details.ForecastDetailsActivity
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
 class CurrentForecastFragment : Fragment() {
@@ -58,10 +56,7 @@ class CurrentForecastFragment : Fragment() {
     }
 
     private fun showForecastDetails(forecast: DailyForecast) {
-        val forecastDetailsIntent = Intent(requireContext(), ForecastDetailsActivity::class.java)
-        forecastDetailsIntent.putExtra("key_temp", forecast.temp)
-        forecastDetailsIntent.putExtra("key_description", forecast.description)
-        startActivity(forecastDetailsIntent)
+        appNavigator.navigateToForecastDetails(forecast)
     }
 
     companion object {

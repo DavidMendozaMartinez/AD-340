@@ -47,4 +47,13 @@ class MainActivity : AppCompatActivity(), AppNavigator {
             CurrentForecastFragmentDirections.actionCurrentForecastFragmentToLocationEntryFragment()
         findNavController(R.id.nav_host_fragment).navigate(action)
     }
+
+    override fun navigateToForecastDetails(forecast: DailyForecast) {
+        val action =
+            CurrentForecastFragmentDirections.actionCurrentForecastFragmentToForecastDetailsFragment(
+                forecast.temp,
+                forecast.description
+            )
+        findNavController(R.id.nav_host_fragment).navigate(action)
+    }
 }
