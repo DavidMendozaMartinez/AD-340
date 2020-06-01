@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.davidmendozamartinez.ad340.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
-class CurrentForecastFragment : Fragment() {
+class WeeklyForecastFragment : Fragment() {
 
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
     private val forecastRepository = ForecastRepository()
@@ -25,7 +25,7 @@ class CurrentForecastFragment : Fragment() {
 
         val zipCode = arguments?.getString(KEY_ZIP_CODE) ?: ""
 
-        val view = inflater.inflate(R.layout.fragment_current_forecast, container, false)
+        val view = inflater.inflate(R.layout.fragment_weekly_forecast, container, false)
 
         val locationEntryButton: FloatingActionButton = view.findViewById(R.id.locationEntryButton)
         locationEntryButton.setOnClickListener {
@@ -50,13 +50,13 @@ class CurrentForecastFragment : Fragment() {
 
     private fun showLocationEntry() {
         val action =
-            CurrentForecastFragmentDirections.actionCurrentForecastFragmentToLocationEntryFragment()
+            WeeklyForecastFragmentDirections.actionWeeklyForecastFragmentToLocationEntryFragment()
         findNavController().navigate(action)
     }
 
     private fun showForecastDetails(forecast: DailyForecast) {
         val action =
-            CurrentForecastFragmentDirections.actionCurrentForecastFragmentToForecastDetailsFragment(
+            WeeklyForecastFragmentDirections.actionWeeklyForecastFragmentToForecastDetailsFragment(
                 forecast.temp,
                 forecast.description
             )
@@ -66,8 +66,8 @@ class CurrentForecastFragment : Fragment() {
     companion object {
         const val KEY_ZIP_CODE = "key_zip_code"
 
-        fun newInstance(zipCode: String): CurrentForecastFragment {
-            val fragment = CurrentForecastFragment()
+        fun newInstance(zipCode: String): WeeklyForecastFragment {
+            val fragment = WeeklyForecastFragment()
 
             val args = Bundle()
             args.putString(KEY_ZIP_CODE, zipCode)
