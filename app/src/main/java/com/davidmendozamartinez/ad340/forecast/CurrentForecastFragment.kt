@@ -15,22 +15,16 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 class CurrentForecastFragment : Fragment() {
 
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
+    private lateinit var locationRepository: LocationRepository
     private val forecastRepository = ForecastRepository()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
-
-        val zipCode = arguments?.getString(KEY_ZIP_CODE) ?: ""
-
         val view = inflater.inflate(R.layout.fragment_current_forecast, container, false)
 
-        val locationEntryButton: FloatingActionButton = view.findViewById(R.id.locationEntryButton)
-        locationEntryButton.setOnClickListener {
-            showLocationEntry()
-        }
+        tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
 
         val dailyForecastList: RecyclerView = view.findViewById(R.id.dailyForecastList)
         dailyForecastList.layoutManager = LinearLayoutManager(requireContext())
@@ -39,11 +33,21 @@ class CurrentForecastFragment : Fragment() {
         }
         dailyForecastList.adapter = dailyForecastAdapter
 
-        forecastRepository.weaklyForecast.observe(viewLifecycleOwner, Observer { forecastItems ->
-            dailyForecastAdapter.submitList(forecastItems)
+        val locationEntryButton: FloatingActionButton = view.findViewById(R.id.locationEntryButton)
+        locationEntryButton.setOnClickListener {
+            showLocationEntry()
+        }
+
+        locationRepository = LocationRepository(requireContext())
+        locationRepository.savedLocation.observe(viewLifecycleOwner, Observer { savedLocation ->
+            when (savedLocation) {
+                is Location.ZipCode -> forecastRepository.loadCurrentForecast(savedLocation.zipCode)
+            }
         })
 
-        forecastRepository.loadForecast(zipCode)
+        forecastRepository.currentForecast.observe(viewLifecycleOwner, Observer { forecastItem ->
+            dailyForecastAdapter.submitList(listOf(forecastItem))
+        })
 
         return view
     }
@@ -61,19 +65,5 @@ class CurrentForecastFragment : Fragment() {
                 forecast.description
             )
         findNavController().navigate(action)
-    }
-
-    companion object {
-        const val KEY_ZIP_CODE = "key_zip_code"
-
-        fun newInstance(zipCode: String): CurrentForecastFragment {
-            val fragment = CurrentForecastFragment()
-
-            val args = Bundle()
-            args.putString(KEY_ZIP_CODE, zipCode)
-            fragment.arguments = args
-
-            return fragment
-        }
     }
 }

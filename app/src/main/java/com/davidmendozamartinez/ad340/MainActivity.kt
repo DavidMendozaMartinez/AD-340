@@ -22,7 +22,10 @@ class MainActivity : AppCompatActivity() {
 
         val navController = findNavController(R.id.nav_host_fragment)
 
-        findViewById<Toolbar>(R.id.toolbar).setTitle(R.string.app_name)
+        val toolbar = findViewById<Toolbar>(R.id.toolbar)
+        toolbar.setTitle(R.string.app_name)
+        setSupportActionBar(toolbar)
+
         findViewById<BottomNavigationView>(R.id.bottomNavigationView).setupWithNavController(
             navController
         )

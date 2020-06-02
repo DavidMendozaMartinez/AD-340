@@ -2,19 +2,29 @@ package com.davidmendozamartinez.ad340
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import java.util.*
 import kotlin.random.Random
 
 class ForecastRepository {
 
-    private val _weaklyForecast = MutableLiveData<List<DailyForecast>>()
-    val weaklyForecast: LiveData<List<DailyForecast>> = _weaklyForecast
+    private val _currentForecast = MutableLiveData<DailyForecast>()
+    val currentForecast: LiveData<DailyForecast> = _currentForecast
 
-    fun loadForecast(zipCode: String) {
+    private val _weeklyForecast = MutableLiveData<List<DailyForecast>>()
+    val weeklyForecast: LiveData<List<DailyForecast>> = _weeklyForecast
+
+    fun loadCurrentForecast(zipCode: String) {
+        val randomTemp = Random.nextFloat().rem(100) * 100
+        val forecast = DailyForecast(Date(), randomTemp, getTempDescription(randomTemp))
+        _currentForecast.value = forecast
+    }
+
+    fun loadWeeklyForecast(zipCode: String) {
         val randomValues = List(10) { Random.nextFloat().rem(100) * 100 }
         val forecastItems = randomValues.map { temp ->
-            DailyForecast(temp, getTempDescription(temp))
+            DailyForecast(Date(), temp, getTempDescription(temp))
         }
-        _weaklyForecast.value = forecastItems
+        _weeklyForecast.value = forecastItems
     }
 
     private fun getTempDescription(temp: Float): String {
