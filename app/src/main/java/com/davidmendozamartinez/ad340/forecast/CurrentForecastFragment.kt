@@ -4,11 +4,10 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.davidmendozamartinez.ad340.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 
@@ -23,15 +22,10 @@ class CurrentForecastFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_current_forecast, container, false)
+        val locationName: TextView = view.findViewById(R.id.locationName)
+        val tempText: TextView = view.findViewById(R.id.tempText)
 
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
-
-        val dailyForecastList: RecyclerView = view.findViewById(R.id.dailyForecastList)
-        dailyForecastList.layoutManager = LinearLayoutManager(requireContext())
-        val dailyForecastAdapter = DailyForecastListAdapter(tempDisplaySettingManager) { forecast ->
-            showForecastDetails(forecast)
-        }
-        dailyForecastList.adapter = dailyForecastAdapter
 
         val locationEntryButton: FloatingActionButton = view.findViewById(R.id.locationEntryButton)
         locationEntryButton.setOnClickListener {
@@ -45,8 +39,12 @@ class CurrentForecastFragment : Fragment() {
             }
         })
 
-        forecastRepository.currentForecast.observe(viewLifecycleOwner, Observer { forecastItem ->
-            dailyForecastAdapter.submitList(listOf(forecastItem))
+        forecastRepository.currentWeather.observe(viewLifecycleOwner, Observer { weather ->
+            locationName.text = weather.name
+            tempText.text = formatTempForDisplay(
+                weather.forecast.temp,
+                tempDisplaySettingManager.getTempDisplaySetting()
+            )
         })
 
         return view
