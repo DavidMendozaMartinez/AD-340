@@ -55,13 +55,4 @@ class CurrentForecastFragment : Fragment() {
             CurrentForecastFragmentDirections.actionCurrentForecastFragmentToLocationEntryFragment()
         findNavController().navigate(action)
     }
-
-    private fun showForecastDetails(forecast: DailyForecast) {
-        val action =
-            CurrentForecastFragmentDirections.actionCurrentForecastFragmentToForecastDetailsFragment(
-                forecast.temp,
-                forecast.description
-            )
-        findNavController().navigate(action)
-    }
 }
