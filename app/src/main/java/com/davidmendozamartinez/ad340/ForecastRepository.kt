@@ -18,9 +18,9 @@ class ForecastRepository {
     private val _weeklyForecast = MutableLiveData<WeeklyForecast>()
     val weeklyForecast: LiveData<WeeklyForecast> = _weeklyForecast
 
-    fun loadCurrentForecast(zipCode: String) {
+    fun loadCurrentForecast(zipCode: String, countryCode: String = "es") {
         val call = createOpenWeatherMapService().currentWeather(
-            zipCode,
+            "$zipCode,$countryCode",
             "imperial",
             BuildConfig.OPEN_WEATHER_MAP_API_KEY
         )
@@ -41,9 +41,9 @@ class ForecastRepository {
         })
     }
 
-    fun loadWeeklyForecast(zipCode: String) {
+    fun loadWeeklyForecast(zipCode: String, countryCode: String = "es") {
         val call = createOpenWeatherMapService().currentWeather(
-            zipCode,
+            "$zipCode,$countryCode",
             "imperial",
             BuildConfig.OPEN_WEATHER_MAP_API_KEY
         )

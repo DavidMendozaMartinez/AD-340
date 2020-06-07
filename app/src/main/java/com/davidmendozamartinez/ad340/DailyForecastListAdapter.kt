@@ -3,10 +3,12 @@ package com.davidmendozamartinez.ad340
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import coil.api.load
 import com.davidmendozamartinez.ad340.api.DailyForecast
 import java.text.SimpleDateFormat
 import java.util.*
@@ -17,6 +19,7 @@ class DailyForecastViewHolder(
     view: View,
     private val tempDisplaySettingManager: TempDisplaySettingManager
 ) : RecyclerView.ViewHolder(view) {
+    private val forecastIcon = view.findViewById<ImageView>(R.id.forecastIcon)
     private val tempText = view.findViewById<TextView>(R.id.tempText)
     private val descriptionText = view.findViewById<TextView>(R.id.descriptionText)
     private val dateText = view.findViewById<TextView>(R.id.dateText)
@@ -28,6 +31,9 @@ class DailyForecastViewHolder(
         )
         descriptionText.text = dailyForecast.weather[0].description
         dateText.text = DATE_FORMAT.format(Date(dailyForecast.date * 1000))
+
+        val iconId = dailyForecast.weather[0].icon
+        forecastIcon.load("http://openweathermap.org/img/wn/${iconId}@2x.png")
     }
 }
 
