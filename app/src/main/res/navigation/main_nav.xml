@@ -30,8 +30,14 @@
         android:label="@string/app_name"
         tools:layout="@layout/fragment_forecast_details">
         <argument
+            android:name="iconId"
+            app:argType="string" />
+        <argument
             android:name="temp"
             app:argType="float" />
+        <argument
+            android:name="date"
+            app:argType="long" />
         <argument
             android:name="description"
             app:argType="string" />
