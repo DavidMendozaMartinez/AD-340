@@ -4,13 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.navArgs
 import coil.api.load
-import com.davidmendozamartinez.ad340.R
 import com.davidmendozamartinez.ad340.TempDisplaySettingManager
+import com.davidmendozamartinez.ad340.databinding.FragmentForecastDetailsBinding
 import com.davidmendozamartinez.ad340.formatTempForDisplay
 import java.text.SimpleDateFormat
 import java.util.*
@@ -18,7 +16,8 @@ import java.util.*
 private val DATE_FORMAT = SimpleDateFormat("MM-dd-yyyy")
 
 class ForecastDetailsFragment : Fragment() {
-
+    private var _binding: FragmentForecastDetailsBinding? = null
+    private val binding get() = _binding!!
     private val args: ForecastDetailsFragmentArgs by navArgs()
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
 
@@ -27,21 +26,20 @@ class ForecastDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val layout = inflater.inflate(R.layout.fragment_forecast_details, container, false)
-
+        _binding = FragmentForecastDetailsBinding.inflate(inflater, container, false)
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
 
-        val forecastIcon = layout.findViewById<ImageView>(R.id.forecastIcon)
-        val tempText = layout.findViewById<TextView>(R.id.tempText)
-        val descriptionText = layout.findViewById<TextView>(R.id.descriptionText)
-        val dateText = layout.findViewById<TextView>(R.id.dateText)
-
-        forecastIcon.load("http://openweathermap.org/img/wn/${args.iconId}@2x.png")
-        tempText.text =
+        binding.forecastIcon.load("http://openweathermap.org/img/wn/${args.iconId}@2x.png")
+        binding.tempText.text =
             formatTempForDisplay(args.temp, tempDisplaySettingManager.getTempDisplaySetting())
-        descriptionText.text = args.description
-        dateText.text = DATE_FORMAT.format(Date(args.date * 1000))
+        binding.descriptionText.text = args.description
+        binding.dateText.text = DATE_FORMAT.format(Date(args.date * 1000))
 
-        return layout
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 }
