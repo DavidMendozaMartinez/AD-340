@@ -10,15 +10,16 @@ import coil.api.load
 import com.davidmendozamartinez.ad340.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.databinding.FragmentForecastDetailsBinding
 import com.davidmendozamartinez.ad340.formatTempForDisplay
-import java.text.SimpleDateFormat
-import java.util.*
 
-private val DATE_FORMAT = SimpleDateFormat("MM-dd-yyyy")
 
 class ForecastDetailsFragment : Fragment() {
+    private val viewModel = ForecastDetailsViewModel()
+
     private var _binding: FragmentForecastDetailsBinding? = null
     private val binding get() = _binding!!
+
     private val args: ForecastDetailsFragmentArgs by navArgs()
+
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
 
     override fun onCreateView(
@@ -28,14 +29,21 @@ class ForecastDetailsFragment : Fragment() {
     ): View? {
         _binding = FragmentForecastDetailsBinding.inflate(inflater, container, false)
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
-
-        binding.forecastIcon.load("http://openweathermap.org/img/wn/${args.iconId}@2x.png")
-        binding.tempText.text =
-            formatTempForDisplay(args.temp, tempDisplaySettingManager.getTempDisplaySetting())
-        binding.descriptionText.text = args.description
-        binding.dateText.text = DATE_FORMAT.format(Date(args.date * 1000))
-
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.viewState.observe(viewLifecycleOwner, androidx.lifecycle.Observer { viewState ->
+            binding.tempText.text = formatTempForDisplay(
+                viewState.temp,
+                tempDisplaySettingManager.getTempDisplaySetting()
+            )
+            binding.descriptionText.text = viewState.description
+            binding.dateText.text = viewState.date
+            binding.forecastIcon.load(viewState.iconUrl)
+        })
+        viewModel.processArgs(args)
     }
 
     override fun onDestroyView() {
