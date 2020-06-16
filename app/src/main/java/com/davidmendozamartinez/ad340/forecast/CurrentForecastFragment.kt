@@ -22,8 +22,9 @@ class CurrentForecastFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_current_forecast, container, false)
-        val locationName: TextView = view.findViewById(R.id.locationName)
-        val tempText: TextView = view.findViewById(R.id.tempText)
+        val locationName = view.findViewById<TextView>(R.id.locationName)
+        val tempText = view.findViewById<TextView>(R.id.tempText)
+        val emptyText = view.findViewById<TextView>(R.id.emptyText)
 
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
 
@@ -40,6 +41,10 @@ class CurrentForecastFragment : Fragment() {
         })
 
         forecastRepository.currentWeather.observe(viewLifecycleOwner, Observer { weather ->
+            emptyText.visibility = View.GONE
+            locationName.visibility = View.VISIBLE
+            tempText.visibility = View.VISIBLE
+
             locationName.text = weather.name
             tempText.text = formatTempForDisplay(
                 weather.forecast.temp,

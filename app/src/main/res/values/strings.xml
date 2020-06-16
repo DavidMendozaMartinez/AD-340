@@ -5,6 +5,7 @@
     <string name="hint_zip_code_entry">Enter ZIP Code</string>
     <string name="button_submit_zip_code">Submit ZIP Code</string>
     <string name="zip_code_entry_error">Please enter valid ZIP Code</string>
+    <string name="label_enter_zip_code">Enter ZIP Code to see current weather</string>
 
     <string name="temp_display_setting_title">Display Units</string>
     <string name="temp_display_setting_dialog_title">Choose Display Units</string>
