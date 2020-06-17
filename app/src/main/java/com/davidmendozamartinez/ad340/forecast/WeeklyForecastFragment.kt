@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ProgressBar
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -24,17 +26,19 @@ class WeeklyForecastFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_weekly_forecast, container, false)
+        val emptyText = view.findViewById<TextView>(R.id.emptyText)
+        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
+        val dailyForecastList = view.findViewById<RecyclerView>(R.id.dailyForecastList)
+        val locationEntryButton = view.findViewById<FloatingActionButton>(R.id.locationEntryButton)
 
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
 
-        val dailyForecastList: RecyclerView = view.findViewById(R.id.dailyForecastList)
         dailyForecastList.layoutManager = LinearLayoutManager(requireContext())
         val dailyForecastAdapter = DailyForecastListAdapter(tempDisplaySettingManager) { forecast ->
             showForecastDetails(forecast)
         }
         dailyForecastList.adapter = dailyForecastAdapter
 
-        val locationEntryButton: FloatingActionButton = view.findViewById(R.id.locationEntryButton)
         locationEntryButton.setOnClickListener {
             showLocationEntry()
         }
@@ -42,11 +46,16 @@ class WeeklyForecastFragment : Fragment() {
         locationRepository = LocationRepository(requireContext())
         locationRepository.savedLocation.observe(viewLifecycleOwner, Observer { savedLocation ->
             when (savedLocation) {
-                is Location.ZipCode -> forecastRepository.loadWeeklyForecast(savedLocation.zipCode)
+                is Location.ZipCode -> {
+                    progressBar.visibility = View.VISIBLE
+                    forecastRepository.loadWeeklyForecast(savedLocation.zipCode)
+                }
             }
         })
 
         forecastRepository.weeklyForecast.observe(viewLifecycleOwner, Observer { weeklyForecast ->
+            emptyText.visibility = View.GONE
+            progressBar.visibility = View.GONE
             dailyForecastAdapter.submitList(weeklyForecast.daily)
         })
 
