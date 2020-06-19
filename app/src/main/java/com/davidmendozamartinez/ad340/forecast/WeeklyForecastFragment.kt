@@ -48,6 +48,7 @@ class WeeklyForecastFragment : Fragment() {
             when (savedLocation) {
                 is Location.ZipCode -> {
                     progressBar.visibility = View.VISIBLE
+                    emptyText.visibility = View.GONE
                     forecastRepository.loadWeeklyForecast(savedLocation.zipCode)
                 }
             }
