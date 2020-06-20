@@ -4,15 +4,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ProgressBar
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.davidmendozamartinez.ad340.*
-import com.google.android.material.floatingactionbutton.FloatingActionButton
+import com.davidmendozamartinez.ad340.databinding.FragmentCurrentForecastBinding
 
 class CurrentForecastFragment : Fragment() {
+    private var _binding: FragmentCurrentForecastBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
     private lateinit var locationRepository: LocationRepository
@@ -22,44 +22,41 @@ class CurrentForecastFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_current_forecast, container, false)
-        val emptyText = view.findViewById<TextView>(R.id.emptyText)
-        val progressBar = view.findViewById<ProgressBar>(R.id.progressBar)
-        val locationName = view.findViewById<TextView>(R.id.locationName)
-        val tempText = view.findViewById<TextView>(R.id.tempText)
-
+        _binding = FragmentCurrentForecastBinding.inflate(inflater, container, false)
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
+        locationRepository = LocationRepository(requireContext())
+        return binding.root
+    }
 
-        val locationEntryButton: FloatingActionButton = view.findViewById(R.id.locationEntryButton)
-        locationEntryButton.setOnClickListener {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.locationEntryButton.setOnClickListener {
             showLocationEntry()
         }
 
-        locationRepository = LocationRepository(requireContext())
         locationRepository.savedLocation.observe(viewLifecycleOwner, Observer { savedLocation ->
             when (savedLocation) {
                 is Location.ZipCode -> {
-                    progressBar.visibility = View.VISIBLE
-                    emptyText.visibility = View.GONE
+                    binding.progressBar.visibility = View.VISIBLE
+                    binding.emptyText.visibility = View.GONE
                     forecastRepository.loadCurrentForecast(savedLocation.zipCode)
                 }
             }
         })
 
         forecastRepository.currentWeather.observe(viewLifecycleOwner, Observer { weather ->
-            emptyText.visibility = View.GONE
-            progressBar.visibility = View.GONE
-            locationName.visibility = View.VISIBLE
-            tempText.visibility = View.VISIBLE
+            binding.emptyText.visibility = View.GONE
+            binding.progressBar.visibility = View.GONE
+            binding.locationName.visibility = View.VISIBLE
+            binding.tempText.visibility = View.VISIBLE
 
-            locationName.text = weather.name
-            tempText.text = formatTempForDisplay(
+            binding.locationName.text = weather.name
+            binding.tempText.text = formatTempForDisplay(
                 weather.forecast.temp,
                 tempDisplaySettingManager.getTempDisplaySetting()
             )
         })
-
-        return view
     }
 
     private fun showLocationEntry() {
