@@ -4,16 +4,17 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.davidmendozamartinez.ad340.Location
 import com.davidmendozamartinez.ad340.LocationRepository
 import com.davidmendozamartinez.ad340.R
+import com.davidmendozamartinez.ad340.databinding.FragmentLocationEntryBinding
 
 class LocationEntryFragment : Fragment() {
+    private var _binding: FragmentLocationEntryBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var locationRepository: LocationRepository
 
@@ -21,15 +22,16 @@ class LocationEntryFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        _binding = FragmentLocationEntryBinding.inflate(inflater, container, false)
         locationRepository = LocationRepository(requireContext())
+        return binding.root
+    }
 
-        val view = inflater.inflate(R.layout.fragment_location_entry, container, false)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        val zipCodeEditText: EditText = view.findViewById(R.id.zipCodeEditText)
-        val enterButton: Button = view.findViewById(R.id.enterButton)
-
-        enterButton.setOnClickListener {
-            val zipCode: String = zipCodeEditText.text.toString()
+        binding.enterButton.setOnClickListener {
+            val zipCode: String = binding.zipCodeEditText.text.toString()
 
             if (zipCode.length != 5) {
                 Toast.makeText(requireContext(), R.string.zip_code_entry_error, Toast.LENGTH_SHORT)
@@ -39,7 +41,5 @@ class LocationEntryFragment : Fragment() {
                 findNavController().navigateUp()
             }
         }
-
-        return view
     }
 }
