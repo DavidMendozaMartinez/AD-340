@@ -10,7 +10,7 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class ForecastRepository {
+class ForecastRepository(private val language: String) {
 
     private val _currentWeather = MutableLiveData<CurrentWeather>()
     val currentWeather: LiveData<CurrentWeather> = _currentWeather
@@ -20,9 +20,10 @@ class ForecastRepository {
 
     fun loadCurrentForecast(zipCode: String, countryCode: String = "es") {
         val call = createOpenWeatherMapService().currentWeather(
-            "$zipCode,$countryCode",
-            "imperial",
-            BuildConfig.OPEN_WEATHER_MAP_API_KEY
+            zipCode = "$zipCode,$countryCode",
+            units = "imperial",
+            apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY,
+            lang = language
         )
         call.enqueue(object : Callback<CurrentWeather> {
             override fun onFailure(call: Call<CurrentWeather>, t: Throwable) {
@@ -43,9 +44,10 @@ class ForecastRepository {
 
     fun loadWeeklyForecast(zipCode: String, countryCode: String = "es") {
         val call = createOpenWeatherMapService().currentWeather(
-            "$zipCode,$countryCode",
-            "imperial",
-            BuildConfig.OPEN_WEATHER_MAP_API_KEY
+            zipCode = "$zipCode,$countryCode",
+            units = "imperial",
+            apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY,
+            lang = language
         )
         call.enqueue(object : Callback<CurrentWeather> {
             override fun onFailure(call: Call<CurrentWeather>, t: Throwable) {
@@ -67,7 +69,8 @@ class ForecastRepository {
                         lon = weatherResponse.coord.lon,
                         exclude = "current,minutely,hourly",
                         units = "imperial",
-                        apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY
+                        apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY,
+                        lang = language
                     )
                     forecastCall.enqueue(object : Callback<WeeklyForecast> {
                         override fun onFailure(call: Call<WeeklyForecast>, t: Throwable) {

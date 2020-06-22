@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">AD 340 Weather</string>
 
@@ -15,4 +16,7 @@
 
     <string name="bottom_nav_label_today">Today</string>
     <string name="bottom_nav_label_weekly">Weekly</string>
+
+    <string name="language_code">en</string>
+    <string name="date_format">MM-dd-yyyy</string>
 </resources>

@@ -13,11 +13,10 @@ import com.davidmendozamartinez.ad340.api.DailyForecast
 import java.text.SimpleDateFormat
 import java.util.*
 
-private val DATE_FORMAT = SimpleDateFormat("MM-dd-yyyy")
-
 class DailyForecastViewHolder(
     view: View,
-    private val tempDisplaySettingManager: TempDisplaySettingManager
+    private val tempDisplaySettingManager: TempDisplaySettingManager,
+    private val locale: Locale
 ) : RecyclerView.ViewHolder(view) {
     private val forecastIcon = view.findViewById<ImageView>(R.id.forecastIcon)
     private val tempText = view.findViewById<TextView>(R.id.tempText)
@@ -26,11 +25,11 @@ class DailyForecastViewHolder(
 
     fun bind(dailyForecast: DailyForecast) {
         tempText.text = formatTempForDisplay(
-            dailyForecast.temp.max,
-            tempDisplaySettingManager.getTempDisplaySetting()
+            dailyForecast.temp.max, tempDisplaySettingManager.getTempDisplaySetting()
         )
         descriptionText.text = dailyForecast.weather[0].description
-        dateText.text = DATE_FORMAT.format(Date(dailyForecast.date * 1000))
+        val dateFormat = SimpleDateFormat(dateText.context.getString(R.string.date_format), locale)
+        dateText.text = dateFormat.format(Date(dailyForecast.date * 1000))
 
         val iconId = dailyForecast.weather[0].icon
         forecastIcon.load("http://openweathermap.org/img/wn/${iconId}@2x.png")
@@ -60,7 +59,7 @@ class DailyForecastListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DailyForecastViewHolder {
         val itemView =
             LayoutInflater.from(parent.context).inflate(R.layout.item_daily_forecast, parent, false)
-        return DailyForecastViewHolder(itemView, tempDisplaySettingManager)
+        return DailyForecastViewHolder(itemView, tempDisplaySettingManager, Locale.getDefault())
     }
 
     override fun onBindViewHolder(holder: DailyForecastViewHolder, position: Int) {

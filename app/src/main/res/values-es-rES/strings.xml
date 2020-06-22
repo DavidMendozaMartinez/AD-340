@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">AD 340 Weather</string>
+
+    <string name="label_zip_code_entry">Introduce tu código postal</string>
+    <string name="hint_zip_code_entry">Introduce el código postal</string>
+    <string name="button_submit_zip_code">Aceptar</string>
+    <string name="zip_code_entry_error">Por favor, introduce un código postal válido</string>
+    <string name="label_current_forecast_enter_zip_code">Añade el código postal para ver el pronóstico actual</string>
+    <string name="label_weekly_forecast_enter_zip_code">Añade el código postal para ver el pronóstico semanal</string>
+
+    <string name="temp_display_setting_title">Unidades de visualización</string>
+    <string name="temp_display_setting_dialog_title">Elige las unidades de visualización</string>
+    <string name="temp_display_setting_dialog_message">Elige qué unidad de temperatura quieres utilizar para la visualización</string>
+    <string name="temp_display_setting_dialog_dismiss_message">Los ajustes tendrán efecto al reiniciar la aplicación</string>
+
+    <string name="bottom_nav_label_today">Actual</string>
+    <string name="bottom_nav_label_weekly">Semanal</string>
+
+    <string name="language_code">es</string>
+    <string name="date_format">dd-MM-yyyy</string>
+</resources>

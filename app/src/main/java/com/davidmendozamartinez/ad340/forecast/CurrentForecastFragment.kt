@@ -16,7 +16,7 @@ class CurrentForecastFragment : Fragment() {
 
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
     private lateinit var locationRepository: LocationRepository
-    private val forecastRepository = ForecastRepository()
+    private val forecastRepository = ForecastRepository(getString(R.string.language_code))
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
