@@ -16,7 +16,7 @@ class CurrentForecastFragment : Fragment() {
 
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
     private lateinit var locationRepository: LocationRepository
-    private val forecastRepository = ForecastRepository(getString(R.string.language_code))
+    private lateinit var forecastRepository: ForecastRepository
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -25,6 +25,7 @@ class CurrentForecastFragment : Fragment() {
         _binding = FragmentCurrentForecastBinding.inflate(inflater, container, false)
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
         locationRepository = LocationRepository(requireContext())
+        forecastRepository = ForecastRepository(getString(R.string.language_code))
         return binding.root
     }
 
