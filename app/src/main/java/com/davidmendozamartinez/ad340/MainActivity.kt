@@ -5,26 +5,28 @@ import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
+import com.davidmendozamartinez.ad340.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
 
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        _binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         tempDisplaySettingManager = TempDisplaySettingManager(this)
 
         val navController = findNavController(R.id.nav_host_fragment)
 
-        val toolbar = findViewById<Toolbar>(R.id.toolbar)
-        toolbar.setTitle(R.string.app_name)
-        setSupportActionBar(toolbar)
+        binding.toolbar.setTitle(R.string.app_name)
+        setSupportActionBar(binding.toolbar)
 
         findViewById<BottomNavigationView>(R.id.bottomNavigationView).setupWithNavController(
             navController
