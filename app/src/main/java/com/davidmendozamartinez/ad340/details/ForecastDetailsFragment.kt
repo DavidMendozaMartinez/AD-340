@@ -8,9 +8,12 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.navArgs
 import coil.api.load
+import com.davidmendozamartinez.ad340.R
 import com.davidmendozamartinez.ad340.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.databinding.FragmentForecastDetailsBinding
 import com.davidmendozamartinez.ad340.formatTempForDisplay
+import java.text.SimpleDateFormat
+import java.util.*
 
 class ForecastDetailsFragment : Fragment() {
     private var _binding: FragmentForecastDetailsBinding? = null
@@ -31,7 +34,8 @@ class ForecastDetailsFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentForecastDetailsBinding.inflate(inflater, container, false)
-        viewModelFactory = ForecastDetailsViewModelFactory(args)
+        val dateFormat = SimpleDateFormat(getString(R.string.date_format), Locale.getDefault())
+        viewModelFactory = ForecastDetailsViewModelFactory(args, dateFormat)
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
         return binding.root
     }

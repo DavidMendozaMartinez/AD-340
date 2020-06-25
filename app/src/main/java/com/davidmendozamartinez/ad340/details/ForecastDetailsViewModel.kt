@@ -7,20 +7,22 @@ import androidx.lifecycle.ViewModelProvider
 import java.text.SimpleDateFormat
 import java.util.*
 
-private val DATE_FORMAT = SimpleDateFormat("MM-dd-yyyy")
-
-class ForecastDetailsViewModelFactory(private val args: ForecastDetailsFragmentArgs) :
+class ForecastDetailsViewModelFactory(
+    private val args: ForecastDetailsFragmentArgs,
+    private val dateFormat: SimpleDateFormat
+) :
     ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(ForecastDetailsViewModel::class.java)) {
-            return ForecastDetailsViewModel(args) as T
+            return ForecastDetailsViewModel(args, dateFormat) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
 
-class ForecastDetailsViewModel(args: ForecastDetailsFragmentArgs) : ViewModel() {
+class ForecastDetailsViewModel(args: ForecastDetailsFragmentArgs, dateFormat: SimpleDateFormat) :
+    ViewModel() {
     private val _viewState: MutableLiveData<ForecastDetailsViewState> = MutableLiveData()
     val viewState: LiveData<ForecastDetailsViewState> = _viewState
 
@@ -28,7 +30,7 @@ class ForecastDetailsViewModel(args: ForecastDetailsFragmentArgs) : ViewModel() 
         _viewState.value = ForecastDetailsViewState(
             temp = args.temp,
             description = args.description,
-            date = DATE_FORMAT.format(Date(args.date * 1000)),
+            date = dateFormat.format(Date(args.date * 1000)),
             iconUrl = "http://openweathermap.org/img/wn/${args.iconId}@2x.png"
         )
     }
