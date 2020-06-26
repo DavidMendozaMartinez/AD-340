@@ -1,8 +1,9 @@
-package com.davidmendozamartinez.ad340
+package com.davidmendozamartinez.ad340.repository
 
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.davidmendozamartinez.ad340.BuildConfig
 import com.davidmendozamartinez.ad340.api.CurrentWeather
 import com.davidmendozamartinez.ad340.api.WeeklyForecast
 import com.davidmendozamartinez.ad340.api.createOpenWeatherMapService
@@ -12,18 +13,18 @@ import retrofit2.Response
 
 class ForecastRepository(private val language: String) {
 
-    private val _currentWeather = MutableLiveData<CurrentWeather>()
-    val currentWeather: LiveData<CurrentWeather> = _currentWeather
-
     private val _weeklyForecast = MutableLiveData<WeeklyForecast>()
     val weeklyForecast: LiveData<WeeklyForecast> = _weeklyForecast
 
-    fun loadCurrentForecast(zipCode: String, countryCode: String = "es") {
+    fun loadCurrentForecast(
+        zipCode: String,
+        countryCode: String = "es",
+        successCallback: (CurrentWeather) -> Unit
+    ) {
         val call = createOpenWeatherMapService().currentWeather(
-            zipCode = "$zipCode,$countryCode",
-            units = "imperial",
             apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY,
-            lang = language
+            lang = language,
+            zipCode = "$zipCode,$countryCode"
         )
         call.enqueue(object : Callback<CurrentWeather> {
             override fun onFailure(call: Call<CurrentWeather>, t: Throwable) {
@@ -34,9 +35,8 @@ class ForecastRepository(private val language: String) {
                 call: Call<CurrentWeather>,
                 response: Response<CurrentWeather>
             ) {
-                val weatherResponse = response.body()
-                if (weatherResponse != null) {
-                    _currentWeather.value = weatherResponse
+                response.body()?.let { currentWeather ->
+                    successCallback(currentWeather)
                 }
             }
         })
@@ -44,10 +44,9 @@ class ForecastRepository(private val language: String) {
 
     fun loadWeeklyForecast(zipCode: String, countryCode: String = "es") {
         val call = createOpenWeatherMapService().currentWeather(
-            zipCode = "$zipCode,$countryCode",
-            units = "imperial",
             apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY,
-            lang = language
+            lang = language,
+            zipCode = "$zipCode,$countryCode"
         )
         call.enqueue(object : Callback<CurrentWeather> {
             override fun onFailure(call: Call<CurrentWeather>, t: Throwable) {
@@ -65,12 +64,10 @@ class ForecastRepository(private val language: String) {
                 val weatherResponse = response.body()
                 if (weatherResponse != null) {
                     val forecastCall = createOpenWeatherMapService().sevenDayForecast(
-                        lat = weatherResponse.coord.lat,
-                        lon = weatherResponse.coord.lon,
-                        exclude = "current,minutely,hourly",
-                        units = "imperial",
                         apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY,
-                        lang = language
+                        lang = language,
+                        lat = weatherResponse.coord.lat,
+                        lon = weatherResponse.coord.lon
                     )
                     forecastCall.enqueue(object : Callback<WeeklyForecast> {
                         override fun onFailure(call: Call<WeeklyForecast>, t: Throwable) {

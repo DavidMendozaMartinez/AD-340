@@ -5,14 +5,25 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.davidmendozamartinez.ad340.*
+import com.davidmendozamartinez.ad340.R
+import com.davidmendozamartinez.ad340.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.databinding.FragmentCurrentForecastBinding
+import com.davidmendozamartinez.ad340.formatTempForDisplay
+import com.davidmendozamartinez.ad340.repository.ForecastRepository
+import com.davidmendozamartinez.ad340.repository.Location
+import com.davidmendozamartinez.ad340.repository.LocationRepository
 
 class CurrentForecastFragment : Fragment() {
     private var _binding: FragmentCurrentForecastBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var viewModelFactory: CurrentForecastViewModelFactory
+    private val viewModel: CurrentForecastViewModel by viewModels(
+        factoryProducer = { viewModelFactory }
+    )
 
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
     private lateinit var locationRepository: LocationRepository
@@ -26,6 +37,7 @@ class CurrentForecastFragment : Fragment() {
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
         locationRepository = LocationRepository(requireContext())
         forecastRepository = ForecastRepository(getString(R.string.language_code))
+        viewModelFactory = CurrentForecastViewModelFactory(forecastRepository)
         return binding.root
     }
 
@@ -41,20 +53,20 @@ class CurrentForecastFragment : Fragment() {
                 is Location.ZipCode -> {
                     binding.progressBar.visibility = View.VISIBLE
                     binding.emptyText.visibility = View.GONE
-                    forecastRepository.loadCurrentForecast(savedLocation.zipCode)
+                    viewModel.loadCurrentForecastInvoked(savedLocation.zipCode)
                 }
             }
         })
 
-        forecastRepository.currentWeather.observe(viewLifecycleOwner, Observer { weather ->
+        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             binding.emptyText.visibility = View.GONE
             binding.progressBar.visibility = View.GONE
             binding.locationName.visibility = View.VISIBLE
             binding.tempText.visibility = View.VISIBLE
 
-            binding.locationName.text = weather.name
+            binding.locationName.text = viewState.location
             binding.tempText.text = formatTempForDisplay(
-                weather.forecast.temp,
+                viewState.temp,
                 tempDisplaySettingManager.getTempDisplaySetting()
             )
         })

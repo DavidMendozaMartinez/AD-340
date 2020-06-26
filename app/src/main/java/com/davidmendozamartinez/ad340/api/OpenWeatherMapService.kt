@@ -19,19 +19,19 @@ interface OpenWeatherMapService {
 
     @GET("/data/2.5/weather")
     fun currentWeather(
-        @Query("zip") zipCode: String,
-        @Query("units") units: String,
         @Query("appid") apiKey: String,
-        @Query("lang") lang: String
+        @Query("lang") lang: String,
+        @Query("units") units: String = "imperial",
+        @Query("zip") zipCode: String
     ): Call<CurrentWeather>
 
     @GET("/data/2.5/onecall")
     fun sevenDayForecast(
+        @Query("appid") apiKey: String,
+        @Query("exclude") exclude: String = "current,minutely,hourly",
+        @Query("lang") lang: String,
         @Query("lat") lat: Float,
         @Query("lon") lon: Float,
-        @Query("exclude") exclude: String,
-        @Query("units") units: String,
-        @Query("appid") apiKey: String,
-        @Query("lang") lang: String
+        @Query("units") units: String = "imperial"
     ): Call<WeeklyForecast>
 }

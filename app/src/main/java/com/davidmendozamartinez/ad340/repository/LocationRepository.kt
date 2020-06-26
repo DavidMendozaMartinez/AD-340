@@ -1,4 +1,4 @@
-package com.davidmendozamartinez.ad340
+package com.davidmendozamartinez.ad340.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData

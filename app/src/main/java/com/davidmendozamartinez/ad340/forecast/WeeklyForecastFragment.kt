@@ -7,9 +7,14 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
-import com.davidmendozamartinez.ad340.*
+import com.davidmendozamartinez.ad340.DailyForecastListAdapter
+import com.davidmendozamartinez.ad340.R
+import com.davidmendozamartinez.ad340.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.api.DailyForecast
 import com.davidmendozamartinez.ad340.databinding.FragmentWeeklyForecastBinding
+import com.davidmendozamartinez.ad340.repository.ForecastRepository
+import com.davidmendozamartinez.ad340.repository.Location
+import com.davidmendozamartinez.ad340.repository.LocationRepository
 
 class WeeklyForecastFragment : Fragment() {
     private var _binding: FragmentWeeklyForecastBinding? = null

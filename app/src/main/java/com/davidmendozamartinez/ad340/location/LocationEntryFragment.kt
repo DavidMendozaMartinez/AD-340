@@ -7,10 +7,10 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
-import com.davidmendozamartinez.ad340.Location
-import com.davidmendozamartinez.ad340.LocationRepository
 import com.davidmendozamartinez.ad340.R
 import com.davidmendozamartinez.ad340.databinding.FragmentLocationEntryBinding
+import com.davidmendozamartinez.ad340.repository.Location
+import com.davidmendozamartinez.ad340.repository.LocationRepository
 
 class LocationEntryFragment : Fragment() {
     private var _binding: FragmentLocationEntryBinding? = null
