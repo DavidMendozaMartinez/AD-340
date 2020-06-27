@@ -1,8 +1,6 @@
 package com.davidmendozamartinez.ad340.repository
 
 import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.davidmendozamartinez.ad340.BuildConfig
 import com.davidmendozamartinez.ad340.api.CurrentWeather
 import com.davidmendozamartinez.ad340.api.WeeklyForecast
@@ -12,9 +10,6 @@ import retrofit2.Callback
 import retrofit2.Response
 
 class ForecastRepository(private val language: String) {
-
-    private val _weeklyForecast = MutableLiveData<WeeklyForecast>()
-    val weeklyForecast: LiveData<WeeklyForecast> = _weeklyForecast
 
     fun loadCurrentForecast(
         zipCode: String,
@@ -42,55 +37,36 @@ class ForecastRepository(private val language: String) {
         })
     }
 
-    fun loadWeeklyForecast(zipCode: String, countryCode: String = "es") {
-        val call = createOpenWeatherMapService().currentWeather(
-            apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY,
-            lang = language,
-            zipCode = "$zipCode,$countryCode"
-        )
-        call.enqueue(object : Callback<CurrentWeather> {
-            override fun onFailure(call: Call<CurrentWeather>, t: Throwable) {
-                Log.e(
-                    ForecastRepository::class.java.simpleName,
-                    "error loading location for weekly forecast",
-                    t
-                )
-            }
-
-            override fun onResponse(
-                call: Call<CurrentWeather>,
-                response: Response<CurrentWeather>
-            ) {
-                val weatherResponse = response.body()
-                if (weatherResponse != null) {
-                    val forecastCall = createOpenWeatherMapService().sevenDayForecast(
-                        apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY,
-                        lang = language,
-                        lat = weatherResponse.coord.lat,
-                        lon = weatherResponse.coord.lon
+    fun loadWeeklyForecast(
+        zipCode: String,
+        countryCode: String = "es",
+        successCallback: (WeeklyForecast) -> Unit
+    ) {
+        loadCurrentForecast(zipCode, countryCode) { currentForecast ->
+            val forecastCall = createOpenWeatherMapService().sevenDayForecast(
+                apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY,
+                lang = language,
+                lat = currentForecast.coord.lat,
+                lon = currentForecast.coord.lon
+            )
+            forecastCall.enqueue(object : Callback<WeeklyForecast> {
+                override fun onFailure(call: Call<WeeklyForecast>, t: Throwable) {
+                    Log.e(
+                        ForecastRepository::class.java.simpleName,
+                        "error loading weekly forecast",
+                        t
                     )
-                    forecastCall.enqueue(object : Callback<WeeklyForecast> {
-                        override fun onFailure(call: Call<WeeklyForecast>, t: Throwable) {
-                            Log.e(
-                                ForecastRepository::class.java.simpleName,
-                                "error weekly forecast",
-                                t
-                            )
-                        }
-
-                        override fun onResponse(
-                            call: Call<WeeklyForecast>,
-                            response: Response<WeeklyForecast>
-                        ) {
-                            val weeklyForecastResponse = response.body()
-                            if (weeklyForecastResponse != null) {
-                                _weeklyForecast.value = weeklyForecastResponse
-                            }
-                        }
-
-                    })
                 }
-            }
-        })
+
+                override fun onResponse(
+                    call: Call<WeeklyForecast>,
+                    response: Response<WeeklyForecast>
+                ) {
+                    response.body()?.let { weeklyForecast ->
+                        successCallback(weeklyForecast)
+                    }
+                }
+            })
+        }
     }
 }

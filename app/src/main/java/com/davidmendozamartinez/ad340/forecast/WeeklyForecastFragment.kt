@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.davidmendozamartinez.ad340.DailyForecastListAdapter
@@ -20,6 +21,11 @@ class WeeklyForecastFragment : Fragment() {
     private var _binding: FragmentWeeklyForecastBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var viewModelFactory: WeeklyForecastViewModelFactory
+    private val viewModel: WeeklyForecastViewModel by viewModels(
+        factoryProducer = { viewModelFactory }
+    )
+
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
     private lateinit var locationRepository: LocationRepository
     private lateinit var forecastRepository: ForecastRepository
@@ -32,6 +38,7 @@ class WeeklyForecastFragment : Fragment() {
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
         locationRepository = LocationRepository(requireContext())
         forecastRepository = ForecastRepository(getString(R.string.language_code))
+        viewModelFactory = WeeklyForecastViewModelFactory(forecastRepository)
         return binding.root
     }
 
@@ -52,15 +59,15 @@ class WeeklyForecastFragment : Fragment() {
                 is Location.ZipCode -> {
                     binding.progressBar.visibility = View.VISIBLE
                     binding.emptyText.visibility = View.GONE
-                    forecastRepository.loadWeeklyForecast(savedLocation.zipCode)
+                    viewModel.loadWeeklyForecastInvoked(savedLocation.zipCode)
                 }
             }
         })
 
-        forecastRepository.weeklyForecast.observe(viewLifecycleOwner, Observer { weeklyForecast ->
+        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             binding.emptyText.visibility = View.GONE
             binding.progressBar.visibility = View.GONE
-            dailyForecastAdapter.submitList(weeklyForecast.daily)
+            dailyForecastAdapter.submitList(viewState.daily)
         })
     }
 
