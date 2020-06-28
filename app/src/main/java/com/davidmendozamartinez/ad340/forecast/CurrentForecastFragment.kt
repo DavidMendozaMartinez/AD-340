@@ -5,8 +5,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.navigation.fragment.findNavController
 import com.davidmendozamartinez.ad340.R
 import com.davidmendozamartinez.ad340.TempDisplaySettingManager
@@ -20,10 +21,7 @@ class CurrentForecastFragment : Fragment() {
     private var _binding: FragmentCurrentForecastBinding? = null
     private val binding get() = _binding!!
 
-    private lateinit var viewModelFactory: CurrentForecastViewModelFactory
-    private val viewModel: CurrentForecastViewModel by viewModels(
-        factoryProducer = { viewModelFactory }
-    )
+    private lateinit var viewModel: CurrentForecastViewModel
 
     private lateinit var tempDisplaySettingManager: TempDisplaySettingManager
     private lateinit var locationRepository: LocationRepository
@@ -37,7 +35,10 @@ class CurrentForecastFragment : Fragment() {
         tempDisplaySettingManager = TempDisplaySettingManager(requireContext())
         locationRepository = LocationRepository(requireContext())
         forecastRepository = ForecastRepository(getString(R.string.language_code))
-        viewModelFactory = CurrentForecastViewModelFactory(forecastRepository)
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            CurrentForecastViewModelFactory(locationRepository, forecastRepository)
+        ).get() as CurrentForecastViewModel
         return binding.root
     }
 
@@ -48,7 +49,7 @@ class CurrentForecastFragment : Fragment() {
             showLocationEntry()
         }
 
-        locationRepository.savedLocation.observe(viewLifecycleOwner, Observer { savedLocation ->
+        viewModel.savedLocation.observe(viewLifecycleOwner, Observer { savedLocation ->
             when (savedLocation) {
                 is Location.ZipCode -> {
                     binding.progressBar.visibility = View.VISIBLE
