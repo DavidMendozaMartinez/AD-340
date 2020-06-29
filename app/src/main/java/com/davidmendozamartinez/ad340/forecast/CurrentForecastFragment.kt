@@ -5,16 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.navigation.fragment.findNavController
 import com.davidmendozamartinez.ad340.R
 import com.davidmendozamartinez.ad340.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.databinding.FragmentCurrentForecastBinding
-import com.davidmendozamartinez.ad340.formatTempForDisplay
 import com.davidmendozamartinez.ad340.repository.ForecastRepository
-import com.davidmendozamartinez.ad340.repository.Location
 import com.davidmendozamartinez.ad340.repository.LocationRepository
 
 class CurrentForecastFragment : Fragment() {
@@ -37,8 +34,15 @@ class CurrentForecastFragment : Fragment() {
         forecastRepository = ForecastRepository(getString(R.string.language_code))
         viewModel = ViewModelProvider(
             requireActivity(),
-            CurrentForecastViewModelFactory(locationRepository, forecastRepository)
+            CurrentForecastViewModelFactory(
+                tempDisplaySettingManager,
+                locationRepository,
+                forecastRepository
+            )
         ).get() as CurrentForecastViewModel
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = requireActivity()
         return binding.root
     }
 
@@ -48,29 +52,6 @@ class CurrentForecastFragment : Fragment() {
         binding.locationEntryButton.setOnClickListener {
             showLocationEntry()
         }
-
-        viewModel.savedLocation.observe(viewLifecycleOwner, Observer { savedLocation ->
-            when (savedLocation) {
-                is Location.ZipCode -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    binding.emptyText.visibility = View.GONE
-                    viewModel.loadCurrentForecastInvoked(savedLocation.zipCode)
-                }
-            }
-        })
-
-        viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-            binding.emptyText.visibility = View.GONE
-            binding.progressBar.visibility = View.GONE
-            binding.locationName.visibility = View.VISIBLE
-            binding.tempText.visibility = View.VISIBLE
-
-            binding.locationName.text = viewState.location
-            binding.tempText.text = formatTempForDisplay(
-                viewState.temp,
-                tempDisplaySettingManager.getTempDisplaySetting()
-            )
-        })
     }
 
     private fun showLocationEntry() {

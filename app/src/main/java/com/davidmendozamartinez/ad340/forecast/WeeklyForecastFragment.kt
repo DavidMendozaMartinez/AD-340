@@ -11,11 +11,11 @@ import androidx.lifecycle.get
 import androidx.navigation.fragment.findNavController
 import com.davidmendozamartinez.ad340.DailyForecastListAdapter
 import com.davidmendozamartinez.ad340.R
+import com.davidmendozamartinez.ad340.Status
 import com.davidmendozamartinez.ad340.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.api.DailyForecast
 import com.davidmendozamartinez.ad340.databinding.FragmentWeeklyForecastBinding
 import com.davidmendozamartinez.ad340.repository.ForecastRepository
-import com.davidmendozamartinez.ad340.repository.Location
 import com.davidmendozamartinez.ad340.repository.LocationRepository
 
 class WeeklyForecastFragment : Fragment() {
@@ -40,6 +40,9 @@ class WeeklyForecastFragment : Fragment() {
             requireActivity(),
             WeeklyForecastViewModelFactory(locationRepository, forecastRepository)
         ).get() as WeeklyForecastViewModel
+
+        binding.viewModel = viewModel
+        binding.lifecycleOwner = requireActivity()
         return binding.root
     }
 
@@ -55,20 +58,10 @@ class WeeklyForecastFragment : Fragment() {
         }
         binding.dailyForecastList.adapter = dailyForecastAdapter
 
-        viewModel.savedLocation.observe(viewLifecycleOwner, Observer { savedLocation ->
-            when (savedLocation) {
-                is Location.ZipCode -> {
-                    binding.progressBar.visibility = View.VISIBLE
-                    binding.emptyText.visibility = View.GONE
-                    viewModel.loadWeeklyForecastInvoked(savedLocation.zipCode)
-                }
-            }
-        })
-
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
-            binding.emptyText.visibility = View.GONE
-            binding.progressBar.visibility = View.GONE
-            dailyForecastAdapter.submitList(viewState.daily)
+            if (viewState.status == Status.SUCCESS) {
+                dailyForecastAdapter.submitList(viewState.data!!.daily)
+            }
         })
     }
 

@@ -13,8 +13,9 @@ class ForecastRepository(private val language: String) {
 
     fun loadCurrentForecast(
         zipCode: String,
-        countryCode: String = "es",
-        successCallback: (CurrentWeather) -> Unit
+        successCallback: (CurrentWeather) -> Unit,
+        failureCallback: (Throwable) -> Unit,
+        countryCode: String = "es"
     ) {
         val call = createOpenWeatherMapService().currentWeather(
             apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY,
@@ -23,6 +24,7 @@ class ForecastRepository(private val language: String) {
         )
         call.enqueue(object : Callback<CurrentWeather> {
             override fun onFailure(call: Call<CurrentWeather>, t: Throwable) {
+                failureCallback(t)
                 Log.e(ForecastRepository::class.java.simpleName, "error loading current weather", t)
             }
 
@@ -39,18 +41,19 @@ class ForecastRepository(private val language: String) {
 
     fun loadWeeklyForecast(
         zipCode: String,
-        countryCode: String = "es",
-        successCallback: (WeeklyForecast) -> Unit
+        successCallback: (WeeklyForecast) -> Unit,
+        failureCallback: (Throwable) -> Unit
     ) {
-        loadCurrentForecast(zipCode, countryCode) { currentForecast ->
-            val forecastCall = createOpenWeatherMapService().sevenDayForecast(
+        loadCurrentForecast(zipCode, { currentForecast ->
+            val call = createOpenWeatherMapService().sevenDayForecast(
                 apiKey = BuildConfig.OPEN_WEATHER_MAP_API_KEY,
                 lang = language,
                 lat = currentForecast.coord.lat,
                 lon = currentForecast.coord.lon
             )
-            forecastCall.enqueue(object : Callback<WeeklyForecast> {
+            call.enqueue(object : Callback<WeeklyForecast> {
                 override fun onFailure(call: Call<WeeklyForecast>, t: Throwable) {
+                    failureCallback(t)
                     Log.e(
                         ForecastRepository::class.java.simpleName,
                         "error loading weekly forecast",
@@ -67,6 +70,13 @@ class ForecastRepository(private val language: String) {
                     }
                 }
             })
-        }
+        }, {
+            failureCallback(it)
+            Log.e(
+                ForecastRepository::class.java.simpleName,
+                "error loading location for weekly forecast",
+                it
+            )
+        })
     }
 }

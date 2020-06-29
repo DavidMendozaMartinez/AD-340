@@ -8,6 +8,7 @@
     <string name="zip_code_entry_error">Por favor, introduce un código postal válido</string>
     <string name="label_current_forecast_enter_zip_code">Añade el código postal para ver el pronóstico actual</string>
     <string name="label_weekly_forecast_enter_zip_code">Añade el código postal para ver el pronóstico semanal</string>
+    <string name="label_forecast_request_error">Ha ocurrido un error inesperado. Por favor inténtalo más tarde</string>
 
     <string name="temp_display_setting_title">Unidades de visualización</string>
     <string name="temp_display_setting_dialog_title">Elige las unidades de visualización</string>

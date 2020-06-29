@@ -8,6 +8,7 @@
     <string name="zip_code_entry_error">Please enter valid ZIP Code</string>
     <string name="label_current_forecast_enter_zip_code">Enter ZIP Code to see current weather</string>
     <string name="label_weekly_forecast_enter_zip_code">Enter ZIP Code to see weekly forecast</string>
+    <string name="label_forecast_request_error">An unexpected error has occurred. Please try again later</string>
 
     <string name="temp_display_setting_title">Display Units</string>
     <string name="temp_display_setting_dialog_title">Choose Display Units</string>
