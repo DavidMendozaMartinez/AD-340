@@ -13,7 +13,7 @@
 
     <fragment
         android:id="@+id/currentForecastFragment"
-        android:name="com.davidmendozamartinez.ad340.forecast.CurrentForecastFragment"
+        android:name="com.davidmendozamartinez.ad340.forecast.current.CurrentForecastFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_current_forecast">
         <action
@@ -26,7 +26,7 @@
 
     <fragment
         android:id="@+id/forecastDetailsFragment"
-        android:name="com.davidmendozamartinez.ad340.details.ForecastDetailsFragment"
+        android:name="com.davidmendozamartinez.ad340.forecast.details.ForecastDetailsFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_forecast_details">
         <argument
@@ -45,7 +45,7 @@
 
     <fragment
         android:id="@+id/weeklyForecastFragment"
-        android:name="com.davidmendozamartinez.ad340.forecast.WeeklyForecastFragment"
+        android:name="com.davidmendozamartinez.ad340.forecast.weekly.WeeklyForecastFragment"
         android:label="@string/app_name"
         tools:layout="@layout/fragment_weekly_forecast">
         <action

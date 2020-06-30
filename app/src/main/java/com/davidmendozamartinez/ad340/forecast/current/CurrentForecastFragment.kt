@@ -1,4 +1,4 @@
-package com.davidmendozamartinez.ad340.forecast
+package com.davidmendozamartinez.ad340.forecast.current
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,6 +11,7 @@ import androidx.navigation.fragment.findNavController
 import com.davidmendozamartinez.ad340.R
 import com.davidmendozamartinez.ad340.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.databinding.FragmentCurrentForecastBinding
+import com.davidmendozamartinez.ad340.forecast.CurrentForecastFragmentDirections
 import com.davidmendozamartinez.ad340.repository.ForecastRepository
 import com.davidmendozamartinez.ad340.repository.LocationRepository
 

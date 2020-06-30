@@ -1,4 +1,4 @@
-package com.davidmendozamartinez.ad340.details
+package com.davidmendozamartinez.ad340.forecast.details
 
 class ForecastDetailsViewState(
     val temp: Float,

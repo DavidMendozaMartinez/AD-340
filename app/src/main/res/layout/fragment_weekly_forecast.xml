@@ -11,13 +11,13 @@
 
         <variable
             name="viewModel"
-            type="com.davidmendozamartinez.ad340.forecast.WeeklyForecastViewModel" />
+            type="com.davidmendozamartinez.ad340.forecast.weekly.WeeklyForecastViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".forecast.CurrentForecastFragment">
+        tools:context=".forecast.current.CurrentForecastFragment">
 
         <TextView
             android:id="@+id/emptyText"

@@ -1,4 +1,4 @@
-package com.davidmendozamartinez.ad340.forecast
+package com.davidmendozamartinez.ad340.forecast.weekly
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,12 +9,12 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.navigation.fragment.findNavController
-import com.davidmendozamartinez.ad340.DailyForecastListAdapter
 import com.davidmendozamartinez.ad340.R
 import com.davidmendozamartinez.ad340.Status
 import com.davidmendozamartinez.ad340.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.api.DailyForecast
 import com.davidmendozamartinez.ad340.databinding.FragmentWeeklyForecastBinding
+import com.davidmendozamartinez.ad340.forecast.WeeklyForecastFragmentDirections
 import com.davidmendozamartinez.ad340.repository.ForecastRepository
 import com.davidmendozamartinez.ad340.repository.LocationRepository
 
@@ -38,7 +38,10 @@ class WeeklyForecastFragment : Fragment() {
         forecastRepository = ForecastRepository(getString(R.string.language_code))
         viewModel = ViewModelProvider(
             requireActivity(),
-            WeeklyForecastViewModelFactory(locationRepository, forecastRepository)
+            WeeklyForecastViewModelFactory(
+                locationRepository,
+                forecastRepository
+            )
         ).get() as WeeklyForecastViewModel
 
         binding.viewModel = viewModel
@@ -53,9 +56,12 @@ class WeeklyForecastFragment : Fragment() {
             showLocationEntry()
         }
 
-        val dailyForecastAdapter = DailyForecastListAdapter(tempDisplaySettingManager) { forecast ->
-            showForecastDetails(forecast)
-        }
+        val dailyForecastAdapter =
+            DailyForecastListAdapter(
+                tempDisplaySettingManager
+            ) { forecast ->
+                showForecastDetails(forecast)
+            }
         binding.dailyForecastList.adapter = dailyForecastAdapter
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->

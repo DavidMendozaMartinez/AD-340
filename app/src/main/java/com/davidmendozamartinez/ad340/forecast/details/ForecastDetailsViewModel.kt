@@ -1,4 +1,4 @@
-package com.davidmendozamartinez.ad340.details
+package com.davidmendozamartinez.ad340.forecast.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

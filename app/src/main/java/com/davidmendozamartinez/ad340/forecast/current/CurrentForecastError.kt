@@ -1,4 +1,4 @@
-package com.davidmendozamartinez.ad340.forecast
+package com.davidmendozamartinez.ad340.forecast.current
 
 import com.davidmendozamartinez.ad340.R
 

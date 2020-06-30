@@ -1,4 +1,4 @@
-package com.davidmendozamartinez.ad340.forecast
+package com.davidmendozamartinez.ad340.forecast.weekly
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +16,10 @@ class WeeklyForecastViewModelFactory(
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(WeeklyForecastViewModel::class.java)) {
-            return WeeklyForecastViewModel(locationRepository, forecastRepository) as T
+            return WeeklyForecastViewModel(
+                locationRepository,
+                forecastRepository
+            ) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
@@ -48,7 +51,11 @@ class WeeklyForecastViewModel(
 
     private fun loadWeeklyForecast(zipCode: String) {
         forecastRepository.loadWeeklyForecast(zipCode, {
-            _viewState.value = Resource.success(WeeklyForecastViewState(it.daily))
+            _viewState.value = Resource.success(
+                WeeklyForecastViewState(
+                    it.daily
+                )
+            )
         }, {
             _viewState.value = Resource.error(WeeklyForecastError.REQUEST_ERROR.resId)
         })

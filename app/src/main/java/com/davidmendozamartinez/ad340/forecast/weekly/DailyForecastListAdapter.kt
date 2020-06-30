@@ -1,4 +1,4 @@
-package com.davidmendozamartinez.ad340
+package com.davidmendozamartinez.ad340.forecast.weekly
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,8 +6,11 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
+import com.davidmendozamartinez.ad340.R
+import com.davidmendozamartinez.ad340.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.api.DailyForecast
 import com.davidmendozamartinez.ad340.databinding.ItemDailyForecastBinding
+import com.davidmendozamartinez.ad340.formatTempForDisplay
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -18,9 +21,10 @@ class DailyForecastViewHolder(
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(dailyForecast: DailyForecast) {
-        binding.tempText.text = formatTempForDisplay(
-            dailyForecast.temp.max, tempDisplaySettingManager.getTempDisplaySetting()
-        )
+        binding.tempText.text =
+            formatTempForDisplay(
+                dailyForecast.temp.max, tempDisplaySettingManager.getTempDisplaySetting()
+            )
         binding.descriptionText.text = dailyForecast.weather[0].description
         binding.dateText.text = dateFormat.format(Date(dailyForecast.date * 1000))
         val iconId = dailyForecast.weather[0].icon
@@ -31,7 +35,9 @@ class DailyForecastViewHolder(
 class DailyForecastListAdapter(
     private val tempDisplaySettingManager: TempDisplaySettingManager,
     private val clickHandler: (DailyForecast) -> Unit
-) : ListAdapter<DailyForecast, DailyForecastViewHolder>(DIFF_CONFIG) {
+) : ListAdapter<DailyForecast, DailyForecastViewHolder>(
+    DIFF_CONFIG
+) {
 
     companion object {
         val DIFF_CONFIG = object : DiffUtil.ItemCallback<DailyForecast>() {
@@ -50,7 +56,11 @@ class DailyForecastListAdapter(
             ItemDailyForecastBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         val dateFormat =
             SimpleDateFormat(parent.context.getString(R.string.date_format), Locale.getDefault())
-        return DailyForecastViewHolder(binding, tempDisplaySettingManager, dateFormat)
+        return DailyForecastViewHolder(
+            binding,
+            tempDisplaySettingManager,
+            dateFormat
+        )
     }
 
     override fun onBindViewHolder(holder: DailyForecastViewHolder, position: Int) {
