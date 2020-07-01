@@ -12,9 +12,8 @@ import androidx.navigation.fragment.findNavController
 import com.davidmendozamartinez.ad340.R
 import com.davidmendozamartinez.ad340.Status
 import com.davidmendozamartinez.ad340.TempDisplaySettingManager
-import com.davidmendozamartinez.ad340.api.DailyForecast
+import com.davidmendozamartinez.ad340.api.model.DailyForecast
 import com.davidmendozamartinez.ad340.databinding.FragmentWeeklyForecastBinding
-import com.davidmendozamartinez.ad340.forecast.WeeklyForecastFragmentDirections
 import com.davidmendozamartinez.ad340.repository.ForecastRepository
 import com.davidmendozamartinez.ad340.repository.LocationRepository
 

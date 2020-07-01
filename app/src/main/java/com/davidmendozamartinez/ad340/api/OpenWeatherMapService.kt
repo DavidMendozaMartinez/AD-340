@@ -1,5 +1,7 @@
 package com.davidmendozamartinez.ad340.api
 
+import com.davidmendozamartinez.ad340.api.model.CurrentForecast
+import com.davidmendozamartinez.ad340.api.model.WeeklyForecast
 import retrofit2.Call
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
@@ -8,25 +10,24 @@ import retrofit2.http.Query
 
 fun createOpenWeatherMapService(): OpenWeatherMapService {
     val retrofit = Retrofit.Builder()
-        .baseUrl("http://api.openweathermap.org")
+        .baseUrl(Routes.OPEN_WEATHER_MAP_BASE_URL)
         .addConverterFactory(MoshiConverterFactory.create())
         .build()
-
     return retrofit.create(OpenWeatherMapService::class.java)
 }
 
 interface OpenWeatherMapService {
 
-    @GET("/data/2.5/weather")
-    fun currentWeather(
+    @GET(Routes.CURRENT_WEATHER_DATA)
+    fun getCurrentForecast(
         @Query("appid") apiKey: String,
         @Query("lang") lang: String,
         @Query("units") units: String = "imperial",
         @Query("zip") zipCode: String
-    ): Call<CurrentWeather>
+    ): Call<CurrentForecast>
 
-    @GET("/data/2.5/onecall")
-    fun sevenDayForecast(
+    @GET(Routes.ONE_CALL_API)
+    fun getWeeklyForecast(
         @Query("appid") apiKey: String,
         @Query("exclude") exclude: String = "current,minutely,hourly",
         @Query("lang") lang: String,
