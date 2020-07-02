@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.davidmendozamartinez.ad340.api.Routes
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -31,7 +32,7 @@ class ForecastDetailsViewModel(args: ForecastDetailsFragmentArgs, dateFormat: Si
             temp = args.temp,
             description = args.description,
             date = dateFormat.format(Date(args.date * 1000)),
-            iconUrl = "http://openweathermap.org/img/wn/${args.iconId}@2x.png"
+            iconUrl = String.format(Routes.OPEN_WEATHER_MAP_ICON, args.iconId)
         )
     }
 }

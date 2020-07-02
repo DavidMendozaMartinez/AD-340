@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import com.davidmendozamartinez.ad340.R
 import com.davidmendozamartinez.ad340.TempDisplaySettingManager
+import com.davidmendozamartinez.ad340.api.Routes
 import com.davidmendozamartinez.ad340.api.model.DailyForecast
 import com.davidmendozamartinez.ad340.databinding.ItemDailyForecastBinding
 import com.davidmendozamartinez.ad340.formatTempForDisplay
@@ -28,16 +29,14 @@ class DailyForecastViewHolder(
         binding.descriptionText.text = dailyForecast.weather[0].description
         binding.dateText.text = dateFormat.format(Date(dailyForecast.date * 1000))
         val iconId = dailyForecast.weather[0].icon
-        binding.forecastIcon.load("http://openweathermap.org/img/wn/${iconId}@2x.png")
+        binding.forecastIcon.load(String.format(Routes.OPEN_WEATHER_MAP_ICON, iconId))
     }
 }
 
 class DailyForecastListAdapter(
     private val tempDisplaySettingManager: TempDisplaySettingManager,
     private val clickHandler: (DailyForecast) -> Unit
-) : ListAdapter<DailyForecast, DailyForecastViewHolder>(
-    DIFF_CONFIG
-) {
+) : ListAdapter<DailyForecast, DailyForecastViewHolder>(DIFF_CONFIG) {
 
     companion object {
         val DIFF_CONFIG = object : DiffUtil.ItemCallback<DailyForecast>() {

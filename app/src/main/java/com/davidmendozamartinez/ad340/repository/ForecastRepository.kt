@@ -2,9 +2,9 @@ package com.davidmendozamartinez.ad340.repository
 
 import android.util.Log
 import com.davidmendozamartinez.ad340.BuildConfig
+import com.davidmendozamartinez.ad340.api.createOpenWeatherMapService
 import com.davidmendozamartinez.ad340.api.model.CurrentForecast
 import com.davidmendozamartinez.ad340.api.model.WeeklyForecast
-import com.davidmendozamartinez.ad340.api.createOpenWeatherMapService
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -32,8 +32,8 @@ class ForecastRepository(private val language: String) {
                 call: Call<CurrentForecast>,
                 response: Response<CurrentForecast>
             ) {
-                response.body()?.let { currentWeather ->
-                    successCallback(currentWeather)
+                response.body()?.let { currentForecast ->
+                    successCallback(currentForecast)
                 }
             }
         })
