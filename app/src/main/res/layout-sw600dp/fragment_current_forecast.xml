@@ -5,7 +5,7 @@
 
     <data>
 
-        <import type="com.davidmendozamartinez.ad340.Status" />
+        <import type="com.davidmendozamartinez.ad340.util.Status" />
 
         <import type="android.view.View" />
 

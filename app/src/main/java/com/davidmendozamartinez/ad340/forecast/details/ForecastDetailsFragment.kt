@@ -10,9 +10,9 @@ import androidx.lifecycle.get
 import androidx.navigation.fragment.navArgs
 import coil.api.load
 import com.davidmendozamartinez.ad340.R
-import com.davidmendozamartinez.ad340.TempDisplaySettingManager
+import com.davidmendozamartinez.ad340.util.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.databinding.FragmentForecastDetailsBinding
-import com.davidmendozamartinez.ad340.formatTempForDisplay
+import com.davidmendozamartinez.ad340.util.formatTempForDisplay
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,10 +44,11 @@ class ForecastDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel.viewState.observe(viewLifecycleOwner, androidx.lifecycle.Observer { viewState ->
-            binding.tempText.text = formatTempForDisplay(
-                viewState.temp,
-                tempDisplaySettingManager.getTempDisplaySetting()
-            )
+            binding.tempText.text =
+                formatTempForDisplay(
+                    viewState.temp,
+                    tempDisplaySettingManager.getTempDisplaySetting()
+                )
             binding.descriptionText.text = viewState.description
             binding.dateText.text = viewState.date
             binding.forecastIcon.load(viewState.iconUrl)

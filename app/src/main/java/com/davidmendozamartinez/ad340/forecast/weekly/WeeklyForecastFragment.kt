@@ -10,8 +10,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.navigation.fragment.findNavController
 import com.davidmendozamartinez.ad340.R
-import com.davidmendozamartinez.ad340.Status
-import com.davidmendozamartinez.ad340.TempDisplaySettingManager
+import com.davidmendozamartinez.ad340.util.Status
+import com.davidmendozamartinez.ad340.util.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.api.model.DailyForecast
 import com.davidmendozamartinez.ad340.databinding.FragmentWeeklyForecastBinding
 import com.davidmendozamartinez.ad340.repository.ForecastRepository

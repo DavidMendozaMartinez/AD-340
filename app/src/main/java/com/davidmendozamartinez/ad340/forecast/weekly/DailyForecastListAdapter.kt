@@ -7,11 +7,11 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import coil.api.load
 import com.davidmendozamartinez.ad340.R
-import com.davidmendozamartinez.ad340.TempDisplaySettingManager
+import com.davidmendozamartinez.ad340.util.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.api.Routes
 import com.davidmendozamartinez.ad340.api.model.DailyForecast
 import com.davidmendozamartinez.ad340.databinding.ItemDailyForecastBinding
-import com.davidmendozamartinez.ad340.formatTempForDisplay
+import com.davidmendozamartinez.ad340.util.formatTempForDisplay
 import java.text.SimpleDateFormat
 import java.util.*
 

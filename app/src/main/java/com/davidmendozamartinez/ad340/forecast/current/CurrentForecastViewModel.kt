@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.davidmendozamartinez.ad340.Resource
-import com.davidmendozamartinez.ad340.TempDisplaySettingManager
-import com.davidmendozamartinez.ad340.formatTempForDisplay
+import com.davidmendozamartinez.ad340.util.Resource
+import com.davidmendozamartinez.ad340.util.TempDisplaySettingManager
+import com.davidmendozamartinez.ad340.util.formatTempForDisplay
 import com.davidmendozamartinez.ad340.repository.ForecastRepository
 import com.davidmendozamartinez.ad340.repository.Location
 import com.davidmendozamartinez.ad340.repository.LocationRepository

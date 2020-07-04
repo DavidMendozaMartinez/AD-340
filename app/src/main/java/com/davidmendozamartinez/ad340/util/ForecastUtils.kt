@@ -1,8 +1,9 @@
-package com.davidmendozamartinez.ad340
+package com.davidmendozamartinez.ad340.util
 
 import android.content.Context
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
+import com.davidmendozamartinez.ad340.R
 
 fun formatTempForDisplay(temp: Float, tempDisplaySetting: TempDisplaySetting): String {
     return when (tempDisplaySetting) {

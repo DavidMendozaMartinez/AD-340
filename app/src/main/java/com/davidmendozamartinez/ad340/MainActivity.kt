@@ -8,6 +8,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.davidmendozamartinez.ad340.databinding.ActivityMainBinding
+import com.davidmendozamartinez.ad340.util.TempDisplaySettingManager
+import com.davidmendozamartinez.ad340.util.showTempDisplaySettingDialog
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
