@@ -5,33 +5,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.davidmendozamartinez.ad340.repository.ForecastRepository
-import com.davidmendozamartinez.ad340.repository.Location
 import com.davidmendozamartinez.ad340.repository.LocationError
-import com.davidmendozamartinez.ad340.repository.LocationRepository
 import com.davidmendozamartinez.ad340.util.Resource
 
 class WeeklyForecastViewModelFactory(
-    private val locationRepository: LocationRepository,
     private val forecastRepository: ForecastRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(WeeklyForecastViewModel::class.java)) {
-            return WeeklyForecastViewModel(
-                locationRepository,
-                forecastRepository
-            ) as T
+            return WeeklyForecastViewModel(forecastRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
 
-class WeeklyForecastViewModel(
-    private val locationRepository: LocationRepository,
-    private val forecastRepository: ForecastRepository
-) : ViewModel() {
-
-    val location: LiveData<Location> get() = locationRepository.savedLocation
+class WeeklyForecastViewModel(private val forecastRepository: ForecastRepository) : ViewModel() {
 
     private val _viewState: MutableLiveData<Resource<WeeklyForecastViewState>> = MutableLiveData()
     val viewState: LiveData<Resource<WeeklyForecastViewState>> = _viewState

@@ -5,26 +5,19 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.davidmendozamartinez.ad340.repository.ForecastRepository
-import com.davidmendozamartinez.ad340.repository.Location
 import com.davidmendozamartinez.ad340.repository.LocationError
-import com.davidmendozamartinez.ad340.repository.LocationRepository
 import com.davidmendozamartinez.ad340.util.Resource
 import com.davidmendozamartinez.ad340.util.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.util.formatTempForDisplay
 
 class CurrentForecastViewModelFactory(
     private val tempDisplaySettingManager: TempDisplaySettingManager,
-    private val locationRepository: LocationRepository,
     private val forecastRepository: ForecastRepository
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(CurrentForecastViewModel::class.java)) {
-            return CurrentForecastViewModel(
-                tempDisplaySettingManager,
-                locationRepository,
-                forecastRepository
-            ) as T
+            return CurrentForecastViewModel(tempDisplaySettingManager, forecastRepository) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }
@@ -32,11 +25,8 @@ class CurrentForecastViewModelFactory(
 
 class CurrentForecastViewModel(
     private val tempDisplaySettingManager: TempDisplaySettingManager,
-    private val locationRepository: LocationRepository,
     private val forecastRepository: ForecastRepository
 ) : ViewModel() {
-
-    val location: LiveData<Location> get() = locationRepository.savedLocation
 
     private val _viewState: MutableLiveData<Resource<CurrentForecastViewState>> = MutableLiveData()
     val viewState: LiveData<Resource<CurrentForecastViewState>> = _viewState

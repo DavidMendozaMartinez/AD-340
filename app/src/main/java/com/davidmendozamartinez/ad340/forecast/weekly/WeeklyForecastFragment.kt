@@ -38,10 +38,7 @@ class WeeklyForecastFragment : Fragment() {
         forecastRepository = ForecastRepository(getString(R.string.language_code))
         viewModel = ViewModelProvider(
             requireActivity(),
-            WeeklyForecastViewModelFactory(
-                locationRepository,
-                forecastRepository
-            )
+            WeeklyForecastViewModelFactory(forecastRepository)
         ).get() as WeeklyForecastViewModel
 
         binding.viewModel = viewModel
@@ -61,7 +58,7 @@ class WeeklyForecastFragment : Fragment() {
         }
         binding.dailyForecastList.adapter = dailyForecastAdapter
 
-        viewModel.location.observe(viewLifecycleOwner, Observer { location ->
+        locationRepository.savedLocation.observe(viewLifecycleOwner, Observer { location ->
             when (location) {
                 is Location.ZipCode -> viewModel.onLocationObtained(location.zipCode)
                 else -> viewModel.onLocationError()

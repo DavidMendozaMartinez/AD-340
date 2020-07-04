@@ -36,11 +36,7 @@ class CurrentForecastFragment : Fragment() {
         forecastRepository = ForecastRepository(getString(R.string.language_code))
         viewModel = ViewModelProvider(
             requireActivity(),
-            CurrentForecastViewModelFactory(
-                tempDisplaySettingManager,
-                locationRepository,
-                forecastRepository
-            )
+            CurrentForecastViewModelFactory(tempDisplaySettingManager, forecastRepository)
         ).get() as CurrentForecastViewModel
 
         binding.viewModel = viewModel
@@ -55,7 +51,7 @@ class CurrentForecastFragment : Fragment() {
             showLocationEntry()
         }
 
-        viewModel.location.observe(viewLifecycleOwner, Observer { location ->
+        locationRepository.savedLocation.observe(viewLifecycleOwner, Observer { location ->
             when (location) {
                 is Location.ZipCode -> viewModel.onLocationObtained(location.zipCode)
                 else -> viewModel.onLocationError()
