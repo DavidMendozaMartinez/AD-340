@@ -10,12 +10,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.get
 import androidx.navigation.fragment.findNavController
 import com.davidmendozamartinez.ad340.R
-import com.davidmendozamartinez.ad340.util.Status
-import com.davidmendozamartinez.ad340.util.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.api.model.DailyForecast
 import com.davidmendozamartinez.ad340.databinding.FragmentWeeklyForecastBinding
 import com.davidmendozamartinez.ad340.repository.ForecastRepository
+import com.davidmendozamartinez.ad340.repository.Location
 import com.davidmendozamartinez.ad340.repository.LocationRepository
+import com.davidmendozamartinez.ad340.util.Status
+import com.davidmendozamartinez.ad340.util.TempDisplaySettingManager
 
 class WeeklyForecastFragment : Fragment() {
     private var _binding: FragmentWeeklyForecastBinding? = null
@@ -55,13 +56,17 @@ class WeeklyForecastFragment : Fragment() {
             showLocationEntry()
         }
 
-        val dailyForecastAdapter =
-            DailyForecastListAdapter(
-                tempDisplaySettingManager
-            ) { forecast ->
-                showForecastDetails(forecast)
-            }
+        val dailyForecastAdapter = DailyForecastListAdapter(tempDisplaySettingManager) { forecast ->
+            showForecastDetails(forecast)
+        }
         binding.dailyForecastList.adapter = dailyForecastAdapter
+
+        viewModel.location.observe(viewLifecycleOwner, Observer { location ->
+            when (location) {
+                is Location.ZipCode -> viewModel.onLocationObtained(location.zipCode)
+                else -> viewModel.onLocationError()
+            }
+        })
 
         viewModel.viewState.observe(viewLifecycleOwner, Observer { viewState ->
             if (viewState.status == Status.SUCCESS) {

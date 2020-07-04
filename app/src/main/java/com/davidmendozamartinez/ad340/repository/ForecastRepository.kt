@@ -2,6 +2,7 @@ package com.davidmendozamartinez.ad340.repository
 
 import android.util.Log
 import com.davidmendozamartinez.ad340.BuildConfig
+import com.davidmendozamartinez.ad340.R
 import com.davidmendozamartinez.ad340.api.createOpenWeatherMapService
 import com.davidmendozamartinez.ad340.api.model.CurrentForecast
 import com.davidmendozamartinez.ad340.api.model.WeeklyForecast
@@ -14,7 +15,7 @@ class ForecastRepository(private val language: String) {
     fun loadCurrentForecast(
         zipCode: String,
         successCallback: (CurrentForecast) -> Unit,
-        failureCallback: (Throwable) -> Unit,
+        failureCallback: (ForecastError) -> Unit,
         countryCode: String = "es"
     ) {
         val call = createOpenWeatherMapService().getCurrentForecast(
@@ -24,17 +25,22 @@ class ForecastRepository(private val language: String) {
         )
         call.enqueue(object : Callback<CurrentForecast> {
             override fun onFailure(call: Call<CurrentForecast>, t: Throwable) {
-                failureCallback(t)
-                Log.e(ForecastRepository::class.java.simpleName, "error loading current weather", t)
+                failureCallback(ForecastError.REQUEST_ERROR)
+                Log.e(
+                    ForecastRepository::class.java.simpleName,
+                    "error loading current forecast",
+                    t
+                )
             }
 
             override fun onResponse(
                 call: Call<CurrentForecast>,
                 response: Response<CurrentForecast>
             ) {
+                println(response.toString())
                 response.body()?.let { currentForecast ->
                     successCallback(currentForecast)
-                }
+                } ?: failureCallback(ForecastError.ZIP_CODE_NOT_FOUND)
             }
         })
     }
@@ -42,7 +48,7 @@ class ForecastRepository(private val language: String) {
     fun loadWeeklyForecast(
         zipCode: String,
         successCallback: (WeeklyForecast) -> Unit,
-        failureCallback: (Throwable) -> Unit
+        failureCallback: (ForecastError) -> Unit
     ) {
         loadCurrentForecast(zipCode, { currentForecast ->
             val call = createOpenWeatherMapService().getWeeklyForecast(
@@ -53,7 +59,7 @@ class ForecastRepository(private val language: String) {
             )
             call.enqueue(object : Callback<WeeklyForecast> {
                 override fun onFailure(call: Call<WeeklyForecast>, t: Throwable) {
-                    failureCallback(t)
+                    failureCallback(ForecastError.REQUEST_ERROR)
                     Log.e(
                         ForecastRepository::class.java.simpleName,
                         "error loading weekly forecast",
@@ -67,16 +73,16 @@ class ForecastRepository(private val language: String) {
                 ) {
                     response.body()?.let { weeklyForecast ->
                         successCallback(weeklyForecast)
-                    }
+                    } ?: failureCallback(ForecastError.ZIP_CODE_NOT_FOUND)
                 }
             })
         }, {
             failureCallback(it)
-            Log.e(
-                ForecastRepository::class.java.simpleName,
-                "error loading location for weekly forecast",
-                it
-            )
         })
     }
+}
+
+enum class ForecastError(val resId: Int) {
+    ZIP_CODE_NOT_FOUND(R.string.label_forecast_request_error_zip_code_not_found),
+    REQUEST_ERROR(R.string.label_forecast_request_error)
 }

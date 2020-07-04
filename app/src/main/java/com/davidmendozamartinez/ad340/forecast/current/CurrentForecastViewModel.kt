@@ -4,12 +4,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import com.davidmendozamartinez.ad340.repository.ForecastRepository
+import com.davidmendozamartinez.ad340.repository.Location
+import com.davidmendozamartinez.ad340.repository.LocationError
+import com.davidmendozamartinez.ad340.repository.LocationRepository
 import com.davidmendozamartinez.ad340.util.Resource
 import com.davidmendozamartinez.ad340.util.TempDisplaySettingManager
 import com.davidmendozamartinez.ad340.util.formatTempForDisplay
-import com.davidmendozamartinez.ad340.repository.ForecastRepository
-import com.davidmendozamartinez.ad340.repository.Location
-import com.davidmendozamartinez.ad340.repository.LocationRepository
 
 class CurrentForecastViewModelFactory(
     private val tempDisplaySettingManager: TempDisplaySettingManager,
@@ -35,26 +36,14 @@ class CurrentForecastViewModel(
     private val forecastRepository: ForecastRepository
 ) : ViewModel() {
 
+    val location: LiveData<Location> get() = locationRepository.savedLocation
+
     private val _viewState: MutableLiveData<Resource<CurrentForecastViewState>> = MutableLiveData()
     val viewState: LiveData<Resource<CurrentForecastViewState>> = _viewState
 
-    init {
-        loadLocation()
-    }
+    fun onLocationObtained(zipCode: String) {
+        _viewState.value = Resource.loading()
 
-    private fun loadLocation() {
-        locationRepository.registerZipCodeChangeListener { location ->
-            when (location) {
-                is Location.ZipCode -> {
-                    _viewState.value = Resource.loading()
-                    loadCurrentForecast(location.zipCode)
-                }
-                else -> _viewState.value = Resource.error(CurrentForecastError.NO_LOCATION.resId)
-            }
-        }
-    }
-
-    private fun loadCurrentForecast(zipCode: String) {
         forecastRepository.loadCurrentForecast(zipCode, { currentForecast ->
             _viewState.value = Resource.success(
                 CurrentForecastViewState(
@@ -66,7 +55,11 @@ class CurrentForecastViewModel(
                 )
             )
         }, {
-            _viewState.value = Resource.error(CurrentForecastError.REQUEST_ERROR.resId)
+            _viewState.value = Resource.error(it.resId)
         })
+    }
+
+    fun onLocationError() {
+        _viewState.value = Resource.error(LocationError.NO_LOCATION.resId)
     }
 }

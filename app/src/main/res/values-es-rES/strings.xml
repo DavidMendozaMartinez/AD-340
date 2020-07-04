@@ -6,8 +6,8 @@
     <string name="hint_zip_code_entry">Introduce el código postal</string>
     <string name="button_submit_zip_code">Aceptar</string>
     <string name="zip_code_entry_error">Por favor, introduce un código postal válido</string>
-    <string name="label_current_forecast_enter_zip_code">Añade el código postal para ver el pronóstico actual</string>
-    <string name="label_weekly_forecast_enter_zip_code">Añade el código postal para ver el pronóstico semanal</string>
+    <string name="label_location_error">Añade el código postal para ver el pronóstico</string>
+    <string name="label_forecast_request_error_zip_code_not_found">El código postal introducido no existe</string>
     <string name="label_forecast_request_error">Ha ocurrido un error inesperado. Por favor inténtalo más tarde</string>
 
     <string name="temp_display_setting_title">Unidades de visualización</string>

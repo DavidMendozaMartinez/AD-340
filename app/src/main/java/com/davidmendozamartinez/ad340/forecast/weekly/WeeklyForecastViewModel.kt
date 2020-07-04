@@ -4,10 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.davidmendozamartinez.ad340.util.Resource
 import com.davidmendozamartinez.ad340.repository.ForecastRepository
 import com.davidmendozamartinez.ad340.repository.Location
+import com.davidmendozamartinez.ad340.repository.LocationError
 import com.davidmendozamartinez.ad340.repository.LocationRepository
+import com.davidmendozamartinez.ad340.util.Resource
 
 class WeeklyForecastViewModelFactory(
     private val locationRepository: LocationRepository,
@@ -30,26 +31,14 @@ class WeeklyForecastViewModel(
     private val forecastRepository: ForecastRepository
 ) : ViewModel() {
 
+    val location: LiveData<Location> get() = locationRepository.savedLocation
+
     private val _viewState: MutableLiveData<Resource<WeeklyForecastViewState>> = MutableLiveData()
     val viewState: LiveData<Resource<WeeklyForecastViewState>> = _viewState
 
-    init {
-        loadLocation()
-    }
+    fun onLocationObtained(zipCode: String) {
+        _viewState.value = Resource.loading()
 
-    private fun loadLocation() {
-        locationRepository.registerZipCodeChangeListener { location ->
-            when (location) {
-                is Location.ZipCode -> {
-                    _viewState.value = Resource.loading()
-                    loadWeeklyForecast(location.zipCode)
-                }
-                else -> _viewState.value = Resource.error(WeeklyForecastError.NO_LOCATION.resId)
-            }
-        }
-    }
-
-    private fun loadWeeklyForecast(zipCode: String) {
         forecastRepository.loadWeeklyForecast(zipCode, {
             _viewState.value = Resource.success(
                 WeeklyForecastViewState(
@@ -57,7 +46,11 @@ class WeeklyForecastViewModel(
                 )
             )
         }, {
-            _viewState.value = Resource.error(WeeklyForecastError.REQUEST_ERROR.resId)
+            _viewState.value = Resource.error(it.resId)
         })
+    }
+
+    fun onLocationError() {
+        _viewState.value = Resource.error(LocationError.NO_LOCATION.resId)
     }
 }
